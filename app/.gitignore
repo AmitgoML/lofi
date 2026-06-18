@@ -1,0 +1,36 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# IDE
+.idea
+.vscode
+.DS_Store
+.cursor
+.cursorrules
+
+# Local credentials
+.env
+
+# chat local database
+.chat_app_messages.sqlite
+
+
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+terraform.tfvars
+crash.log
+override.tf
+
+
+# other
+notebooks

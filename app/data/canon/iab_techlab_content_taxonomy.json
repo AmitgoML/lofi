@@ -1,0 +1,17 @@
+{
+  "source": "https://iabtechlab.com/standards/content-taxonomy/",
+  "qa": [
+    {
+      "questions": [
+        "What is the IAB Content Taxonomy used for?",
+        "How does taxonomy support contextual targeting and suitability?"
+      ],
+      "answer": "The Content Taxonomy standardizes content categories and attributes to enable interoperable contextual targeting, brand suitability, and reporting across platforms and vendors.",
+      "implication": [
+        "Map publisher content to taxonomy; enforce in SSP/DSP and brand safety tools.",
+        "Use taxonomy labels to refine suitability and optimize contextual segments.",
+        "Update mappings as taxonomy versions evolve to maintain consistency."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "source": "https://www.wpromote.com/blog/digital-marketing/conversions-down-yoy",
+  "qa": [
+    {
+      "questions": [
+        "Why are conversions down YoY and what to do?",
+        "How should marketers diagnose conversion drops?"
+      ],
+      "answer": "Macro shifts (privacy, auction changes, seasonality), creative fatigue, UX friction, and tracking changes can depress conversions. Diagnose by funnel stage, cohort, channel, and technical issues.",
+      "implication": [
+        "Audit tracking, attribution, and consent; fix data loss first.",
+        "Revamp creative and offers; improve speed and UX.",
+        "Rebalance budgets to efficient channels; validate with tests."
+      ]
+    }
+  ]
+}

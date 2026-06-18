@@ -1,0 +1,17 @@
+{
+  "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8199559/",
+  "qa": [
+    {
+      "questions": [
+        "How do we translate academic findings into practical marketing?",
+        "What safeguards ensure external validity?"
+      ],
+      "answer": "Bridge academic evidence to practice by checking construct alignment, population and context similarity, and mechanism plausibility. Use pre‑registered field tests to validate effects before scale.",
+      "implication": [
+        "Map constructs/metrics to operational KPIs and audiences.",
+        "Pilot in representative markets; measure incrementality and spillovers.",
+        "Document assumptions and limits; avoid over‑generalizing lab results."
+      ]
+    }
+  ]
+}

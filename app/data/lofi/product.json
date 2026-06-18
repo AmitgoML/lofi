@@ -1,0 +1,576 @@
+[
+  {
+    "id": "product-dashboard-metrics-001",
+    "type": "product:dashboard",
+    "questions": "What performance metrics does the Dashboard show and how are changes calculated?",
+    "answer": "The Dashboard surfaces key performance indicators across your selected campaigns and timeframe: Impressions, CTR, Clicks, Conversion Rate, Conversions, and Conversion Value. Each metric tile also displays a percentage change versus the immediately preceding period based on the active date filter. For example, ‘Last 7 days’ compares against the prior 7 days; ‘Last 3 months’ compares against the prior 3 months. This enables quick pulse checks on directionality and momentum without leaving the view.",
+    "tags": ["product", "dashboard", "reporting"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-dashboard-date-filters-002",
+    "type": "product:dashboard",
+    "questions": "How do I adjust the reporting window and drill into time ranges?",
+    "answer": "Use the date picker to choose pre-set ranges like Last 7 days, Last 4 weeks, or Last 3 months—or define a custom date range. All tiles and charts update instantly to reflect your selection, and percentage deltas rebase to the matching previous period. This makes it easy to analyze promotions, experiments, or seasonality without building a separate report.",
+    "tags": ["product", "dashboard", "filters"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-dashboard-campaign-filters-003",
+    "type": "product:dashboard",
+    "questions": "Can I filter the Dashboard by specific campaigns?",
+    "answer": "Yes. Select one or more campaigns to isolate performance for those selections. The tiles and charts will reflect only the chosen campaigns, allowing you to compare initiatives without noise from unrelated efforts.",
+    "tags": ["product", "dashboard", "filters", "campaigns"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-dashboard-metric-comparison-004",
+    "type": "product:dashboard",
+    "questions": "How do I compare multiple metrics in the chart?",
+    "answer": "Click metric tiles (e.g., Conversions, CTR, CPC) to add them to the chart. You can toggle multiple tiles at once to overlay trends for side‑by‑side comparison, helping you see relationships such as how CPC and CTR move relative to Conversions over time.",
+    "tags": ["product", "dashboard", "charts"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-dashboard-spend-effectiveness-005",
+    "type": "product:dashboard",
+    "questions": "What is Spend Effectiveness and which metrics does it include?",
+    "answer": "Spend Effectiveness helps you evaluate cost efficiency over time. Metrics include Ad Spend, CPM, CPC, Cost per Conversion, and ROAS. When you toggle these tiles, the time‑series chart updates to show trends for the selected metrics across your chosen date range and campaign filters.",
+    "tags": ["product", "dashboard", "spend", "efficiency"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-dashboard-campaign-cards-006",
+    "type": "product:dashboard",
+    "questions": "What campaign-level details are available on the Dashboard?",
+    "answer": "For each campaign, you can view a quick summary including platforms (e.g., Facebook, Instagram, LinkedIn), current status (e.g., LIVE), budget, spend, impressions, clicks, and conversions. This provides a fast scan of initiative health alongside aggregate charts.",
+    "tags": ["product", "dashboard", "campaigns"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-dashboard-limitations-007",
+    "type": "product:dashboard",
+    "questions": "What actions are not supported from the Dashboard?",
+    "answer": "The Dashboard is read-only. You cannot edit targeting, creatives, or budgets here (use the Campaigns section). Creative assets are not editable in this view. Export/download (PDF/CSV) is not currently available. Granular drilldowns such as demographic splits (age, gender, region) are not exposed beyond campaign and time filters.",
+    "tags": ["product", "dashboard", "limitations"],
+    "last_updated": "2025-09-23"
+  }
+  ,
+  {
+    "id": "product-creative-upload-001",
+    "type": "product:creative",
+    "questions": "How do I upload creative assets and what file types are supported?",
+    "answer": "In Creative, click Upload to add assets. Supported types include images, videos, audio, and PDFs (max 100 MB per file). After upload, assets immediately appear in your library and are available to use in campaigns and Adobe Express for editing.",
+    "tags": ["product", "creative", "upload"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-creative-organize-002",
+    "type": "product:creative",
+    "questions": "How can I search, sort, and filter assets in Creative?",
+    "answer": "Use the search bar to find assets by name. Sort by Newest first, Oldest first, A–Z, Z–A, or Recently modified. Apply filters by type (images, videos, audio) and by usage status (All assets, Used in ads, Not used yet, Favorites) to quickly narrow to what you need.",
+    "tags": ["product", "creative", "organization"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-creative-used-badge-003",
+    "type": "product:creative",
+    "questions": "How does the ‘Used in ads’ badge work?",
+    "answer": "Lofi automatically detects when an asset is used in any ad or campaign and flags it with a ‘Used’ badge. This makes it easy to differentiate assets already leveraged in live or draft campaigns from those that have not yet been used.",
+    "tags": ["product", "creative", "usage"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-creative-asset-details-004",
+    "type": "product:creative",
+    "questions": "What details can I view or change for an asset?",
+    "answer": "Open an asset’s metadata panel to see file type, size, creation and modification dates, and usage status. You can rename the asset, mark it as a Favorite, download it to your device, or delete it from your library.",
+    "tags": ["product", "creative", "asset-details"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-creative-adobe-express-005",
+    "type": "product:creative",
+    "questions": "How does Adobe Express integrate with Creative for editing?",
+    "answer": "You can open assets directly in Adobe Express to apply resizing, filters, background removal, text overlays, animations, and video trimming. Adobe Express also offers templates, royalty‑free stock, and generative AI (Firefly) for image and text effects. Once edits are saved in Adobe Express, the updated version syncs back to Lofi automatically and is instantly available in your asset library.",
+    "tags": ["product", "creative", "adobe-express", "editing"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-creative-limitations-006",
+    "type": "product:creative",
+    "questions": "What actions are not supported in the Creative section?",
+    "answer": "Manual bulk tagging or adding custom metadata fields beyond Favorites and usage filters is not supported. Advanced editing is handled via Adobe Express (Lofi does not host a full-featured native editor). Creative analytics such as CTR or conversions by asset are not shown in Creative—use the Dashboard or Campaigns for performance insights.",
+    "tags": ["product", "creative", "limitations"],
+    "last_updated": "2025-09-23"
+  }
+  ,
+  {
+    "id": "product-help-search-browse-001",
+    "type": "product:help",
+    "questions": "How do I find help articles and tutorials?",
+    "answer": "Use the Help search bar to find guides, FAQs, and resources. You can also browse by topic (e.g., General, Campaign Management, Creative, Reporting, Billing, Account Management). Results open in‑app so you can follow instructions without leaving your workflow.",
+    "tags": ["product", "help", "search", "browse"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-help-categories-002",
+    "type": "product:help",
+    "questions": "What topics are available in the Help Center?",
+    "answer": "The Help Center groups content into: General (platform overview, getting started, where to get help), Campaign Management (creation, targeting, optimization), Creative (best practices, brand guidelines, testing), Reporting (metrics, customizing views), Billing (subscription, cycles, invoices), and Account Management (password reset, user management, ad accounts).",
+    "tags": ["product", "help", "categories"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-help-essentials-003",
+    "type": "product:help",
+    "questions": "Where can I find onboarding instructions to launch my first campaign?",
+    "answer": "Open the Essentials onboarding guide for step‑by‑step setup: configure billing, connect ad accounts, and launch your first campaign using the four‑step flow. It links to deeper ‘how‑to’ articles so you can progress from setup to go‑live confidently.",
+    "tags": ["product", "help", "onboarding"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-help-latest-updates-004",
+    "type": "product:help",
+    "questions": "How do I stay current with new features and improvements?",
+    "answer": "Check the Latest Updates section for release highlights (e.g., Lucy Beta Launch, Adobe Express Integration, Advanced User Management). Summaries explain what changed and why it matters, with links to deeper docs or how‑tos when relevant.",
+    "tags": ["product", "help", "releases"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-help-faqs-005",
+    "type": "product:help",
+    "questions": "Can I access FAQs from the Help section?",
+    "answer": "Yes. Browse FAQs by category (General, Billing, Campaign Management, Creative, Reporting, Account Management) or use search. Examples include: ‘What is Lofi?’, ‘How can I contact Lofi?’, ‘What campaigns are prohibited?’, and ‘What is Lucy’s pre‑launch audit?’.",
+    "tags": ["product", "help", "faqs"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-help-contact-support-006",
+    "type": "product:help",
+    "questions": "How do I contact Support from within the app?",
+    "answer": "Submit a support request via the built‑in form: include a clear subject and message describing your issue or question. You’ll receive follow‑up via your account email; live chat is not available at this time.",
+    "tags": ["product", "help", "support"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-help-limitations-007",
+    "type": "product:help",
+    "questions": "What actions are not supported in the Help section?",
+    "answer": "Live chat or instant support is not available; requests are handled via the form. The Help section is guidance‑only—campaigns, billing, or account settings cannot be edited here. Personalized performance insights are not shown in Help (use Dashboard or Campaigns). Offline export of the entire Help library is not supported.",
+    "tags": ["product", "help", "limitations"],
+    "last_updated": "2025-09-23"
+  }
+  ,
+  {
+    "id": "product-campaigns-views-001",
+    "type": "product:campaigns",
+    "questions": "What views are available in the Campaigns section?",
+    "answer": "Campaigns supports two modes. List View: a structured table with columns such as platforms, status, budget, spend, impressions, clicks, and conversions. Timeline View: a calendar‑style planner where you can switch between weeks, months, or quarters to map schedules visually, spot overlaps/gaps, and plan launch windows at a glance.",
+    "tags": ["product", "campaigns", "views"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaigns-timeline-002",
+    "type": "product:campaigns",
+    "questions": "How does the Timeline View help with planning?",
+    "answer": "Timeline View lets you plan the year ahead in an interactive calendar. Toggle between week, month, or quarter to see the right level of detail, quickly spot overlaps or gaps, and align launches with promotional moments. It’s ideal for capacity planning and ensuring a balanced schedule without conflicts.",
+    "tags": ["product", "campaigns", "timeline"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaigns-filters-003",
+    "type": "product:campaigns",
+    "questions": "How do I search and filter campaigns?",
+    "answer": "Search by campaign name and combine filters for flexible views. Filter by status (Draft, Scheduled, Live, Paused, Completed) and platform (e.g., Facebook, Instagram, TikTok, LinkedIn, Bing, Google, YouTube, CTV via MNTN/Tatari, audio via iHeart/Pandora/Spotify). Example: show all Live campaigns on Facebook.",
+    "tags": ["product", "campaigns", "filters", "search"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaigns-columns-004",
+    "type": "product:campaigns",
+    "questions": "Can I customize which columns and KPIs are visible?",
+    "answer": "Yes. Toggle optional KPIs—CTR, Conversion Rate, CPC, ROAS, Dates—alongside defaults like Budget, Spend, Impressions, Clicks, and Conversions. Tailor the List View to the success metrics that matter most to your team.",
+    "tags": ["product", "campaigns", "customization"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaigns-status-005",
+    "type": "product:campaigns",
+    "questions": "How are campaign statuses displayed?",
+    "answer": "Each campaign has a clear status label: Draft, Scheduled, Live, Paused, or Completed. Evergreen campaigns are additionally flagged with a distinctive badge so you can identify always‑on initiatives quickly.",
+    "tags": ["product", "campaigns", "status"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaigns-actions-006",
+    "type": "product:campaigns",
+    "questions": "What actions can I take from Campaigns?",
+    "answer": "Use the Actions menu to edit or pause campaigns. You can also launch new campaigns directly via the Create Campaign button, keeping management and creation in a single, streamlined workspace.",
+    "tags": ["product", "campaigns", "actions"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaigns-kpis-007",
+    "type": "product:campaigns",
+    "questions": "How do I quickly compare budgets and performance?",
+    "answer": "Compare Budget vs. Spend at a glance and scan core KPIs (Impressions, Clicks, Conversions) side by side at the campaign level. This provides a fast read on pacing and outcomes without leaving the overview.",
+    "tags": ["product", "campaigns", "budget", "kpis"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaigns-limitations-008",
+    "type": "product:campaigns",
+    "questions": "What actions are not supported in the Campaigns section?",
+    "answer": "Campaign Overview is not for creative design or setup; use Creative for assets. Deep analytics (e.g., ROAS over time, multi‑metric trend analysis) live in Dashboard. Exporting campaign lists/timelines (PDF/CSV) isn’t shown in the current UI. Collaboration features like commenting or tagging teammates are not supported here.",
+    "tags": ["product", "campaigns", "limitations"],
+    "last_updated": "2025-09-23"
+  }
+  ,
+  {
+    "id": "product-campaign-creation-overview-001",
+    "type": "product:campaign-creation",
+    "questions": "How does the Campaign Creation workflow and navigation work?",
+    "answer": "Campaign Creation is a four‑step flow: Strategy → Platforms → Content → Launch. You can move freely across steps at any time—no need to proceed strictly in sequence. Save progress as a draft from the top‑right at any point, and continue once required fields are satisfied. This flexible workflow lets you gather inputs in any order without losing work.",
+    "tags": ["product", "campaign-creation", "workflow"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-goal-002",
+    "type": "product:campaign-creation",
+    "questions": "How do I set the campaign objective in Step 1 (Strategy)?",
+    "answer": "Pick one campaign goal: Conversions, Traffic, or Awareness. Optionally, add a short ‘Describe your goal’ note and click Save. These notes help Lofi’s AI understand intent and translate your objective into the appropriate settings per ad platform.",
+    "tags": ["product", "campaign-creation", "strategy", "goals"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-audience-003",
+    "type": "product:campaign-creation",
+    "questions": "How do I define who to target in Step 1?",
+    "answer": "Choose one or multiple audience types at once: New customers (prospecting/lookalike), Existing customers (CRM lists), and Website visitors (remarketing). Optionally, describe your audience to improve AI‑assisted configurations later. Expert Options are available: set demographics (Age, Gender), add Interests manually or via a website scan that auto‑suggests interests, and upload data when relevant (CSV/Excel for customer lists; pixel/analytics exports for website visitors).",
+    "tags": ["product", "campaign-creation", "audience", "expert-options"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-geo-004",
+    "type": "product:campaign-creation",
+    "questions": "How do I choose where ads should show (geo targeting) in Step 1?",
+    "answer": "Specify at least one location (required) and add multiple if needed. Search for cities, regions, or countries—suggestions are powered by Google Places API for global coverage. For address‑level precision, set a radius (0–50 miles) using the slider. The interface supports positive selections (inclusions) and does not configure geo exclusions in this step.",
+    "tags": ["product", "campaign-creation", "geo"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step1-limitations-005",
+    "type": "product:campaign-creation",
+    "questions": "What can’t I do in Step 1 (Strategy)?",
+    "answer": "Launching is not available from Step 1—you must complete all four steps. Budgets, bids, and scheduling are configured later at Launch. Creative design happens in Step 3 (Content). Location exclusions are not supported here (only positive selections). Uploads accept CSV/Excel for customer/visitor data; other formats are not supported. Required fields cannot be bypassed: you must set a goal, choose at least one audience type, and select at least one location.",
+    "tags": ["product", "campaign-creation", "limitations"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step1-notes-006",
+    "type": "product:campaign-creation",
+    "questions": "Any tips for Step 1?",
+    "answer": "Expert Options are available at every step for power users. You can combine multiple audience types and multiple locations for flexibility. Adding concise descriptions for Goal and Audience helps Lofi's AI translate intent across platforms more effectively, improving initial recommendations downstream.",
+    "tags": ["product", "campaign-creation", "tips"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-platforms-channels-007",
+    "type": "product:campaign-creation",
+    "questions": "How do I select channels and platforms in Step 2?",
+    "answer": "Choose one primary channel: Social (Facebook, Instagram, TikTok, LinkedIn, Snapchat, Reddit, X, YouTube, Pinterest), Search (Google, Bing), Display (Google Display Network, Yahoo, Amazon), Shopping (Google, Amazon), Connected TV (Hulu, MNTN, Tatari), Digital Audio (Spotify, Pandora, SiriusXM, iHeartMedia), or Sports (Coming Soon). Within your chosen channel, select one or more platforms. Available channels and platforms are automatically filtered based on your campaign goal from Step 1 to show the most relevant options.",
+    "tags": ["product", "campaign-creation", "platforms", "channels"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-creative-types-008",
+    "type": "product:campaign-creation",
+    "questions": "How do I select creative types in Step 2?",
+    "answer": "Choose creative types at two levels: high-level (Image, Video, or Text) or platform-specific formats. Examples include Meta (Image Ads, Stories Ads, Messenger Ads), Google (Responsive Search Ads, Dynamic Search Ads), and TikTok (Reels Ads, TopView Ads, Branded Hashtag Challenges). This flexibility supports both quick-start campaigns and fine-grained setups tailored to each platform's strengths.",
+    "tags": ["product", "campaign-creation", "creative", "formats"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-expert-options-009",
+    "type": "product:campaign-creation",
+    "questions": "What Expert Options are available in Step 2?",
+    "answer": "Expert Options are available at every step, including Step 2. Toggle this option to access advanced configuration settings such as placements, ad variations, or targeting refinements. This gives power users more granular control over their platform and creative selections.",
+    "tags": ["product", "campaign-creation", "expert-options"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-budget-allocation-010",
+    "type": "product:campaign-creation",
+    "questions": "How does budget allocation work for multi-platform campaigns?",
+    "answer": "When you select multiple platforms within a channel, Lofi automatically manages budget allocation. By default, spend is split evenly across platforms. If Dynamic Optimization is enabled in Step 4, Lofi will automatically reallocate spend to the platforms delivering the strongest performance, maximizing your campaign effectiveness.",
+    "tags": ["product", "campaign-creation", "budget", "optimization"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step2-required-011",
+    "type": "product:campaign-creation",
+    "questions": "What are the required fields in Step 2?",
+    "answer": "Step 2 requires: (1) One Channel must be selected, (2) At least one Platform within that channel must be selected, and (3) At least one Creative Type must be chosen (either at high-level or platform-specific format). These requirements ensure your campaign has a clear focus and the necessary components to launch successfully.",
+    "tags": ["product", "campaign-creation", "required-fields"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step2-strengths-012",
+    "type": "product:campaign-creation",
+    "questions": "What are the key strengths of Step 2?",
+    "answer": "Step 2 offers goal-driven filtering that shows only relevant channel and platform options based on your campaign objective. It enforces one channel per campaign for focus and clarity while supporting multi-platform selection within that channel. Creative selection is flexible (high-level or platform-specific), Expert Options are available for advanced users, and Lofi provides smart budget allocation with dynamic optimization capabilities.",
+    "tags": ["product", "campaign-creation", "strengths"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-creative-assets-013",
+    "type": "product:campaign-creation",
+    "questions": "How do I work with creative assets in Step 3?",
+    "answer": "You can upload your own images, logos, or videos, or pull from your Creative Library of approved assets. Use Adobe Express integration to create or edit directly (stock images, templates, AI image generation, image & video editing). Assets sync automatically from Adobe Express into Lofi. Assets already 'used in ads' are automatically flagged for governance and tracking compliance.",
+    "tags": ["product", "campaign-creation", "creative", "assets"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-ad-copy-014",
+    "type": "product:campaign-creation",
+    "questions": "How do I create ad copy in Step 3?",
+    "answer": "Write multiple headlines and descriptions manually, or use AI generation by entering a product URL for Landing Page Scan (extracts headlines, descriptions, and CTA suggestions). Multiple headline and description variations are supported for automated A/B testing. Add keyword suggestions (optional) with AI recommendations based on campaign context.",
+    "tags": ["product", "campaign-creation", "copy", "ai"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-ad-preview-015",
+    "type": "product:campaign-creation",
+    "questions": "How does the ad preview work in Step 3?",
+    "answer": "A dynamic preview shows how ads render across selected platforms. Toggle the platform dropdown (Facebook, Instagram, TikTok, Google, LinkedIn) to switch between previews. Use left/right arrows to scroll through multiple uploaded assets. For text-based ads, preview displays only the first text entry. Preview updates instantly as copy, CTA, or assets are changed.",
+    "tags": ["product", "campaign-creation", "preview"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-cta-016",
+    "type": "product:campaign-creation",
+    "questions": "How do I select Call to Action (CTA) buttons in Step 3?",
+    "answer": "Use the CTA dropdown to select platform-specific options like Learn More, Shop Now, Contact Us, Book Now, or Call Now. Available CTAs vary by channel and are dynamically filtered based on your selected platforms to ensure compatibility and optimal performance.",
+    "tags": ["product", "campaign-creation", "cta"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step3-expert-017",
+    "type": "product:campaign-creation",
+    "questions": "What Expert Options are available in Step 3?",
+    "answer": "Expert Options allow you to override AI recommendations for copy and keywords. For search-based ads, you can enter additional manual keywords for more control over targeting and ad relevance. This gives advanced users granular control over their creative and copy strategy.",
+    "tags": ["product", "campaign-creation", "expert-options"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-keyword-research-018a",
+    "type": "product:campaign-creation",
+    "questions": ["How do I do keyword research in Lofi?", "How do I explore keywords for my campaign?", "How do I find keywords for my ads?", "Where can I research keywords in Lofi?"],
+    "answer": "Lofi offers keyword exploration directly inside the campaign creation flow. In Step 3 (Create Ad Content), the platform provides AI-powered keyword suggestions based on your campaign goal, target audience, and landing page context. You can review and select from these suggestions or enter your own. For search campaigns, use Expert Options to add manual keywords and override AI recommendations for more granular targeting control. Keywords are optional for social and display campaigns but are central to Google Search campaigns.",
+    "tags": ["product", "campaign-creation", "keywords", "keyword-research", "search"],
+    "last_updated": "2026-03-16"
+  },
+  {
+    "id": "product-campaign-creation-keyword-suggestions-018b",
+    "type": "product:campaign-creation",
+    "questions": ["How does Lofi suggest keywords?", "Where do I find keyword suggestions in Lofi?", "How do I use AI keyword recommendations?", "How do keywords work in Lofi campaigns?"],
+    "answer": "Lofi's AI generates keyword suggestions automatically in Step 3 of campaign creation. Suggestions are derived from your campaign context — brand name, goal, target audience description, and landing page URL (if provided via Landing Page Scan). The AI surfaces relevant search terms your audience is likely using. Suggested keywords appear as selectable chips you can add to your campaign. For search campaigns, selected keywords are stored in the campaign's ad details and used by Google to match your ads to user queries. You can always add custom keywords via the Expert Options field.",
+    "tags": ["product", "campaign-creation", "keywords", "keyword-suggestions", "ai", "search"],
+    "last_updated": "2026-03-16"
+  },
+  {
+    "id": "product-campaign-creation-step3-required-018",
+    "type": "product:campaign-creation",
+    "questions": "What are the required fields in Step 3?",
+    "answer": "Required fields adjust based on campaign type: For image/video ads, you need at least one asset, one headline, one description, one CTA, and a landing page URL. For text-only ads, no image is required but headlines, description, and CTA are still mandatory. Keywords are optional for search ads.",
+    "tags": ["product", "campaign-creation", "required-fields"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-campaign-types-019",
+    "type": "product:campaign-creation",
+    "questions": "What campaign types are available in Step 4?",
+    "answer": "Choose between Standard Campaign (runs for a specific time period with defined start and end dates) or Evergreen Campaign (runs continuously until you pause or stop it). Standard campaigns require date selection, while Evergreen campaigns do not need end dates.",
+    "tags": ["product", "campaign-creation", "campaign-types"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-budget-settings-020",
+    "type": "product:campaign-creation",
+    "questions": "How do I set up campaign budget in Step 4?",
+    "answer": "Choose between daily budget or total budget. Lofi automatically applies your budget across platforms, splitting spend evenly by default. If Dynamic Budget Allocation is enabled, Lofi continuously reallocates budget to the best-performing platforms for maximum ROAS. You can also add a descriptive campaign name for easy identification.",
+    "tags": ["product", "campaign-creation", "budget"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-ai-optimizations-021",
+    "type": "product:campaign-creation",
+    "questions": "What AI-powered optimizations can I enable in Step 4?",
+    "answer": "Enable or disable four AI optimizations: Dynamic Creative Optimization (automatically tests and optimizes ad creatives), Dynamic Audience Optimization (continuously refines audience targeting), Dynamic Budget Allocation (dynamically shifts spend between platforms), and Automated Reporting (weekly email reports with key insights and performance summaries).",
+    "tags": ["product", "campaign-creation", "ai", "optimization"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-audit-review-022",
+    "type": "product:campaign-creation",
+    "questions": "What happens during the campaign review and compliance check?",
+    "answer": "Before launch, campaigns pass through Lucy's Pre-Launch Audit to ensure compliance with platform and brand rules. You can preview ads with left/right arrows to view creative variations (first entry for each text field shown by default). The overview displays goal, campaign type, platforms, duration, target audience, and budget breakdown including service fees.",
+    "tags": ["product", "campaign-creation", "audit", "review"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-launch-payment-023",
+    "type": "product:campaign-creation",
+    "questions": "How do I launch my campaign and handle payment?",
+    "answer": "Once approved, click 'Approve and Launch Campaign'. Lofi saves your campaign and redirects you to the payment page via Stripe. After payment, your campaign goes live and starts running across the chosen platforms immediately.",
+    "tags": ["product", "campaign-creation", "launch", "payment"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step4-required-024",
+    "type": "product:campaign-creation",
+    "questions": "What are the required fields in Step 4?",
+    "answer": "Step 4 requires: Campaign Type (Standard or Evergreen), Campaign Schedule (only for Standard campaigns), Campaign Budget, and Campaign Name. These fields ensure your campaign has proper timing, funding, and identification before going live.",
+    "tags": ["product", "campaign-creation", "required-fields"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step1-limitations-025",
+    "type": "product:campaign-creation",
+    "questions": "What can't I do in Step 1 (Strategy)?",
+    "answer": "You cannot build multi-objective campaigns (must commit to one primary goal like leads, awareness, or sales). You cannot skip strategy inputs (goal, audience, and geography are mandatory). You cannot create custom sequencing or restructure the 4-step flow—you must follow Lofi's predefined workflow structure.",
+    "tags": ["product", "campaign-creation", "limitations", "strategy"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step2-limitations-026",
+    "type": "product:campaign-creation",
+    "questions": "What can't I do in Step 2 (Platform Selection)?",
+    "answer": "You cannot run omnichannel campaigns (only one channel per campaign—separate campaigns needed for social + search). You cannot micro-control platform budget splits (Lofi decides allocation, starting even and re-allocating with AI). You cannot override AI filtering (available platforms and creative types are dynamically filtered based on your goal).",
+    "tags": ["product", "campaign-creation", "limitations", "platforms"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step3-limitations-027",
+    "type": "product:campaign-creation",
+    "questions": "What can't I do in Step 3 (Creative Development)?",
+    "answer": "You cannot do unlimited freeform testing (no bulk-prompting for 20+ variations). You cannot preview every copy/creative permutation (only first text entry + selected creative shown). You cannot create custom CTAs (only native platform CTAs allowed). You cannot bypass creative requirements (video ads need video, text-only ads don't need images).",
+    "tags": ["product", "campaign-creation", "limitations", "creative"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-campaign-creation-step4-limitations-028",
+    "type": "product:campaign-creation",
+    "questions": "What can't I do in Step 4 (Launch & Optimization)?",
+    "answer": "You cannot manually override AI optimization settings (no direct adjustment of creative weighting, audience reallocations, or budget splits). You cannot skip Lucy's pre-launch audit compliance check. You cannot do unpaid trial runs (campaigns only go live after Stripe payment confirmation). You cannot create unified master campaigns with pooled budgets across multiple campaigns.",
+    "tags": ["product", "campaign-creation", "limitations", "launch"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-lucy-overview-001",
+    "type": "product:lucy",
+    "questions": "What is Lucy and how does she work?",
+    "answer": "Lucy is Lofi's integrated AI chatbot that acts as your Paid Media consultant. She's powered by a multi-agent system with specialized agents: Support Agent (answers Lofi questions), Performance Analyst Agent (interprets data and highlights insights), Copywriting Agent (generates compelling ad copy), Creative Director Agent (suggests visuals and formats), Platform Compliance Agent (ensures platform rules), and Campaign Planning Agent (guides strategic setup). You can open and close Lucy as needed throughout your workflow.",
+    "tags": ["product", "lucy", "ai", "overview"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-lucy-performance-analysis-002",
+    "type": "product:lucy",
+    "questions": "How does Lucy analyze campaign performance?",
+    "answer": "Lucy has direct access to raw performance data (impressions, CTR, clicks, ROAS, revenue) and contextualizes insights with dynamic benchmarks and competitive intelligence. She can provide campaign summaries ('What's my best performing campaign?'), trend analyses ('Show me performance over time'), and optimization strategies. Her Performance Analyst Agent helps you understand whether your numbers are above, below, or on par with market standards.",
+    "tags": ["product", "lucy", "performance", "analysis"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-lucy-campaign-creation-003",
+    "type": "product:lucy",
+    "questions": "How can Lucy help with campaign creation?",
+    "answer": "Lucy can generate draft campaigns directly in chat with step-by-step configuration guidance. Her Campaign Planning Agent helps with strategic setup across goals, targeting, and channels. Creative suggestions from Lucy can be saved straight into your creative library for reuse. She acts as a planning partner, guiding you through audience selection, goal setting, and cross-platform setup.",
+    "tags": ["product", "lucy", "campaign-creation"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-lucy-creative-collaboration-004",
+    "type": "product:lucy",
+    "questions": "How does Lucy help with creative work?",
+    "answer": "Lucy's Creative Director Agent suggests and evaluates visuals, videos, and creative formats. You can upload photos & files, generate images (beta), or generate videos (beta). Inputs are flexible: type descriptions, configure parameters (aspect ratio, duration), or upload assets. Lucy ensures creative alignment with your brand tone and audience expectations, acting as a creative collaborator for AI-driven asset creation and recommendations.",
+    "tags": ["product", "lucy", "creative", "collaboration"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-lucy-compliance-005",
+    "type": "product:lucy",
+    "questions": "How does Lucy ensure campaign compliance?",
+    "answer": "Lucy's Platform Compliance Agent ensures campaigns and creatives meet platform-specific rules. She acts as a compliance advisor, checking that your campaigns will pass platform requirements before launch. This helps prevent rejections and ensures your ads meet the standards of Meta, Google, TikTok, and other advertising platforms.",
+    "tags": ["product", "lucy", "compliance"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-lucy-strategic-role-006",
+    "type": "product:lucy",
+    "questions": "What strategic roles does Lucy play?",
+    "answer": "Lucy acts as a planning partner (audience, goals, cross-platform setup), performance analyst (turning data into insights, comparing with benchmarks), creative collaborator (AI-driven asset creation, previews, recommendations), compliance advisor (ensuring platform rules), and time saver (automating repetitive setup, reporting, and creative generation). She's designed to be a true extension of your digital marketing team.",
+    "tags": ["product", "lucy", "strategy", "role"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-settings-overview-001",
+    "type": "product:settings",
+    "questions": "What is the Settings section and what does it control?",
+    "answer": "Settings is the administrative hub of Lofi, giving users control over their account, subscription, brand setup, user permissions, and ad platform connections. It ensures teams can configure the foundation for campaigns and creative work, with subsections for Account, Billing, Brand, Ad Accounts, User Management, and Integrations (coming soon).",
+    "tags": ["product", "settings", "overview"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-settings-account-002",
+    "type": "product:settings",
+    "questions": "What can I manage in the Account settings?",
+    "answer": "Account settings let you manage personal details (name, phone number, profile picture) and company information (company name, industry, states licensed to do business). You can also configure login and security settings including Two-Factor Authentication, login history, and email/password changes. This ensures accounts stay secure and aligned to business/legal requirements.",
+    "tags": ["product", "settings", "account", "security"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-settings-billing-003",
+    "type": "product:settings",
+    "questions": "What billing features are available in Settings?",
+    "answer": "Billing settings include subscription management (plan type, renewal cycle, pricing), payment methods and billing address management, and invoice history with download links. This allows finance/admin teams to directly manage costs without going through support, providing full transparency and control over subscription and payment details.",
+    "tags": ["product", "settings", "billing", "subscription"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-settings-brand-004",
+    "type": "product:settings",
+    "questions": "How does the Brand settings work and why is it important?",
+    "answer": "Brand settings are critical for Lofi as they feed into campaign setup and creative generation. Four sub-tabs include: Brand Strategy (purpose, mission, values, target audience, positioning, tone of voice), Visuals (brand colors, fonts, logos, imagery style, design elements), Brand Messaging (tagline, key messaging pillars), and Brand Guidelines (logo usage rules, copy tone, do's/don'ts, keyword blacklists). This ensures Lucy's creative agents produce brand-safe, consistent ads.",
+    "tags": ["product", "settings", "brand", "creative"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-settings-ad-accounts-005",
+    "type": "product:settings",
+    "questions": "How do I manage ad platform connections in Settings?",
+    "answer": "Ad Accounts settings let you connect advertising platforms (Meta, Google, Bing, Amazon, TikTok, LinkedIn, YouTube, Pinterest, etc.) and manage authorizations and data-sharing (campaign data, spend info, audience insights). Connection requests streamline onboarding across platforms, creating a central hub for omnichannel campaign execution.",
+    "tags": ["product", "settings", "ad-accounts", "integrations"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-settings-user-management-006",
+    "type": "product:settings",
+    "questions": "How does User Management work in Settings?",
+    "answer": "User Management lets you define team member roles and permissions: Admin, Reviewer (coming soon), Contributor, and Viewer. Permissions cover analytics, campaign creation, ad review/approval, ad account management, integrations, brand guidance, billing, and user invites. This fits multi-location/franchise use cases with differentiated HQ vs. local access.",
+    "tags": ["product", "settings", "user-management", "permissions"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "product-settings-integrations-007",
+    "type": "product:settings",
+    "questions": "What integrations are planned for Settings?",
+    "answer": "Integrations (Coming Soon) will enable third-party service and platform integrations beyond core ad accounts, such as analytics, CRM, or data warehouses. This future feature will expand Lofi's role from campaign execution into a connected marketing ecosystem, providing deeper integration capabilities for enterprise users.",
+    "tags": ["product", "settings", "integrations", "future"],
+    "last_updated": "2025-09-23"
+  }
+]
+
+

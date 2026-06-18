@@ -1,0 +1,17 @@
+{
+  "source": "https://www.sba.gov/business-guide/plan-your-business/calculate-your-startup-costs/break-even-point",
+  "qa": [
+    {
+      "questions": [
+        "What is break‑even point (BEP) and how is it calculated?",
+        "How do we compute units or revenue to break even?"
+      ],
+      "answer": "Break‑even point is when total revenue equals total costs. Unit BEP = Fixed Costs / (Unit Price − Unit Variable Cost). Revenue BEP = Fixed Costs / Contribution Margin Ratio.",
+      "implication": [
+        "Estimate BEP to set CAC guardrails and budget payback targets.",
+        "Use contribution margin to prioritize products and promotions.",
+        "Model scenarios (price, COGS, CAC) to stress‑test plans."
+      ]
+    }
+  ]
+}

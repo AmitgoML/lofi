@@ -1,0 +1,17 @@
+{
+  "source": "https://www.bcg.com/publications/2025/six-steps-to-more-effective-marketing-measurement",
+  "qa": [
+    {
+      "questions": [
+        "What are the steps to modernize marketing measurement?",
+        "How do we operationalize effective measurement at scale?"
+      ],
+      "answer": "BCG outlines steps spanning data foundations, experimentation, MMM modernization, governance, talent, and activation. The goal is faster, trusted insights that drive decisions and value creation.",
+      "implication": [
+        "Stand up a cross‑functional measurement council and roadmap.",
+        "Invest in first‑party data, clean rooms, and experimentation platforms.",
+        "Modernize MMM (weekly cadence, hierarchical, calibrated) and link to finance."
+      ]
+    }
+  ]
+}

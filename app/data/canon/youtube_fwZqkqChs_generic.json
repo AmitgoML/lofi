@@ -1,0 +1,17 @@
+{
+  "source": "https://www.youtube.com/watch?v=fwZqkq-Ch-s",
+  "qa": [
+    {
+      "questions": [
+        "What are video education best practices for marketers?",
+        "How can we extract repeatable lessons from a single talk/demo?"
+      ],
+      "answer": "Focus on the core framework and examples, translate to checklists/templates, and test on a small scale. Capture metrics and learning to determine if the method should be standardized.",
+      "implication": [
+        "Summarize framework into a one‑pager with do/don’t examples.",
+        "Run a quick pilot; measure lift on attention/CTR/CVR.",
+        "If repeatable, turn into a creative brief template and training."
+      ]
+    }
+  ]
+}

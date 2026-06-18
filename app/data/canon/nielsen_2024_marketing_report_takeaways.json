@@ -1,0 +1,29 @@
+{
+  "source": "https://thatrandomagency.com/2024/05/17/nielsen-marketing-report-2024-takeaways/",
+  "qa": [
+    {
+      "questions": [
+        "What are 2024 budget and channel trends from Nielsen’s report?",
+        "How are marketers allocating spend in 2024?"
+      ],
+      "answer": "Marketers report continued or increasing investment with a bias toward digital channels (social, search, online video, and display) while acknowledging the need to balance near‑term performance with brand building.",
+      "implication": [
+        "Maintain a balanced mix that funds both demand creation and capture.",
+        "Prioritize channels with demonstrable incremental lift, not just last‑click.",
+        "Reserve budget for creative and measurement to improve return on media."
+      ]
+    },
+    {
+      "questions": [
+        "What measurement challenges stand out in 2024?",
+        "Where are marketers struggling to prove ROI?"
+      ],
+      "answer": "Signal loss, fragmented journeys, and inconsistent KPIs make it harder to prove ROI. Stronger triangulation (experiments, MMM, platform lift) and better data hygiene are needed to guide reallocations.",
+      "implication": [
+        "Pair controlled tests with MMM to quantify incrementality and calibrate models.",
+        "Improve first‑party data capture and taxonomy to stabilize reads.",
+        "Adopt common KPI ladders to compare performance across channels."
+      ]
+    }
+  ]
+}

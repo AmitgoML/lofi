@@ -1,0 +1,30 @@
+{
+  "source": "https://www.thinkwithgoogle.com/intl/en-gb/marketing-strategies/app-and-mobile/milliseconds-make-millions/",
+  "qa": [
+    {
+      "questions": [
+        "Why does page speed matter for revenue?",
+        "How do milliseconds impact conversion rates?"
+      ],
+      "answer": "Even small increases in page load time reduce conversion rates and revenue. Faster experiences improve engagement, lower bounce rates, and increase add‑to‑cart and checkout completion, especially on mobile.",
+      "implication": [
+        "Set performance budgets; track Core Web Vitals (LCP, INP, CLS).",
+        "Prioritize critical rendering path; defer non‑critical JS and third‑party tags.",
+        "Optimize images (format, compression, responsive) and enable HTTP/2/3 + caching.",
+        "Measure speed by template and device; tie to conversion and SEO metrics."
+      ]
+    },
+    {
+      "questions": [
+        "What are practical steps to improve mobile speed?",
+        "How can we reduce latency without hurting UX?"
+      ],
+      "answer": "Reduce network and execution cost: ship less JS/CSS, lazy‑load below‑the‑fold content, preconnect critical origins, and use CDNs. Optimize fonts and avoid layout shifts.",
+      "implication": [
+        "Audit JS size and third‑party tags; remove or sandbox heavy scripts.",
+        "Adopt image CDNs and modern formats (WebP/AVIF).",
+        "Implement server‑side rendering or streaming for key pages."
+      ]
+    }
+  ]
+}

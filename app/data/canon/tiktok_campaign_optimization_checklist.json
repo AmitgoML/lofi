@@ -1,0 +1,17 @@
+{
+  "source": "https://ads.tiktok.com/help/article/campaign-optimization-checklist-troubleshooting",
+  "qa": [
+    {
+      "questions": [
+        "What are TikTok’s key steps to optimize campaigns?",
+        "How to troubleshoot underdelivery or poor performance on TikTok?"
+      ],
+      "answer": "Ensure sufficient optimization events, broad targeting, competitive bids/budgets, and high‑quality creative. Avoid frequent disruptive edits; use recommended optimization goals and placements.",
+      "implication": [
+        "Consolidate ad groups to accumulate signals and exit learning.",
+        "Refresh creatives regularly; follow native best practices for hooks.",
+        "Adjust bids/budgets methodically; avoid over‑restrictive targeting."
+      ]
+    }
+  ]
+}

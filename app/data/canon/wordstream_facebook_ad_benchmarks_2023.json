@@ -1,0 +1,17 @@
+{
+  "source": "https://www.wordstream.com/blog/ws/2023/03/21/facebook-ad-benchmarks",
+  "qa": [
+    {
+      "questions": [
+        "What are typical Facebook Ads benchmarks by industry?",
+        "How should we use Facebook benchmarks in practice?"
+      ],
+      "answer": "Benchmarks provide average CPM, CPC, CTR, and conversion rates by industry, but vary by objective, audience, and creative. Use as directional checks, not hard targets.",
+      "implication": [
+        "Compare to relevant vertical/geo/objective; avoid chasing global medians.",
+        "Diagnose outliers by checking creative, audience fit, landing pages.",
+        "Anchor decisions on CAC, payback, and incrementality."
+      ]
+    }
+  ]
+}

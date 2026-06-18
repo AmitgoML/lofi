@@ -1,0 +1,29 @@
+{
+  "source": "https://heybooster.ai/blog/dont-waste-your-google-ads-budget-on-out-of-stock-products",
+  "qa": [
+    {
+      "questions": [
+        "Why should you stop ads for out‑of‑stock products?",
+        "What is the impact of advertising unavailable items?"
+      ],
+      "answer": "Advertising out‑of‑stock items wastes spend, hurts Quality Score and user trust, and can degrade account performance through poor engagement signals.",
+      "implication": [
+        "Automate product‑level pausing via feed rules and scripts when availability=out_of_stock.",
+        "Route budget to in‑stock, high‑margin SKUs; suppress OOS variants in Shopping feeds.",
+        "Add back‑in‑stock alerts and alternatives on PDPs to salvage demand."
+      ]
+    },
+    {
+      "questions": [
+        "How do you operationalize OOS protection in Google Ads?",
+        "What tools prevent spend on unavailable SKUs?"
+      ],
+      "answer": "Use Merchant Center feed rules, supplemental feeds, and scheduled scripts/APIs to pause SKUs, update custom labels, and adjust bids when inventory changes.",
+      "implication": [
+        "Implement hourly inventory sync; alert on feed errors and disapprovals.",
+        "Leverage custom labels for availability and margin to drive bid strategies.",
+        "QA PDP schema and stock status to keep Shopping data accurate."
+      ]
+    }
+  ]
+}

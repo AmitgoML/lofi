@@ -1,0 +1,84 @@
+[
+  {
+    "id": "rn-new-look-feel-001",
+    "type": "release-notes",
+    "questions": "What's new in Lofi? What are the latest updates? What changed in the July 2025 update? Is there a new look and feel?",
+    "answer": "📅 **July 11, 2025 - New Look and Feel**\n\nWe've redesigned the Lofi webapp to make it easier to navigate and get tasks done. The new interface includes:\n\n• **Cleaner Dashboard** - Better tracking of what matters most\n• **Improved Creative Library** - Easier organization and launching of assets\n• **More Accessible Help Resources** - Guidance available whenever you need it\n• **Upgraded Configuration Wizard** - Streamlined four-step campaign setup\n\nThis update is now live and available to all clients. The goal is to make your workflow simpler and your day easier.",
+    "tags": ["ux", "ui", "general-availability", "dashboard", "creative-library"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-lucy-beta-002",
+    "type": "release-notes",
+    "questions": "What is Lucy? Is there an AI assistant? How do I get help with campaigns? What can Lucy do?",
+    "answer": "📅 **June 24, 2025 - Lucy Beta Launch**\n\nLucy is our in-app AI assistant that's now live in beta to support your campaign workflow. Lucy can help you with:\n\n• **Image Generation** - Create visuals for your campaigns\n• **Audience Targeting Tips** - Get expert advice on who to target\n• **Integration How-Tos** - Learn how to connect platforms and tools\n• **Campaign Guidance** - Step-by-step campaign creation support\n\nLucy is trained on both Lofi features and digital marketing best practices to help you move faster. She'll only get smarter over time as we continue to improve the AI.",
+    "tags": ["ai", "assistant", "lucy", "beta", "campaign-help"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-adobe-express-003",
+    "type": "release-notes",
+    "questions": "Can I edit images in Lofi? Is there Adobe integration? How do I create visuals? Can I use stock images?",
+    "answer": "📅 **June 12, 2025 - Adobe Express Integration**\n\nYou can now bring Adobe's creative power directly into your campaign workflow:\n\n• **Browse and Import Stock Images** - Access Adobe's stock library\n• **Apply Branded Templates** - Use templates that match your brand\n• **Advanced Video/Image Editing** - Edit directly inside Lofi\n• **No Tool Switching** - Everything happens in one platform\n\nThis integration lets you design high-quality creatives without leaving Lofi, making your creative workflow seamless and efficient.",
+    "tags": ["integrations", "adobe-express", "creative", "editing", "stock-images"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-variant-creation-004",
+    "type": "release-notes",
+    "questions": "How does variant generation work? Are the AI suggestions better? Why are my variants improving? What changed with creative suggestions?",
+    "answer": "📅 **May 26, 2025 - Improved Variant Creation**\n\nWe've retrained our variant generation engine using expanded performance data from thousands of campaigns. This means you'll now get:\n\n• **More Targeted Suggestions** - Variants that better match your specific goals\n• **More Diverse Options** - Wider range of creative and copy variations\n• **More Accurate Recommendations** - Better alignment with what actually performs\n• **Goal-Specific Optimization** - Suggestions tailored to your campaign objectives\n\nBetter training data = better results for your campaigns.",
+    "tags": ["optimization", "variants", "ai", "models", "creative-suggestions"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-brand-profiles-005",
+    "type": "release-notes",
+    "questions": "How do I manage my brand? Can I set brand guidelines? How do I keep campaigns consistent? Where do I set brand colors and fonts?",
+    "answer": "📅 **April 29, 2025 - Centralized Brand Profiles**\n\nYou can now manage your brand identity in one place and enforce it across all campaigns:\n\n• **Central Brand Profile** - Set tone, visuals, logos, fonts, and approved phrases\n• **Team Access** - All users can access brand elements\n• **Automatic Application** - Brand elements are applied in variant generation and creative suggestions\n• **Consistent Messaging** - Ensures consistent messaging and visuals across teams and channels\n\nThis helps maintain brand consistency automatically across all your advertising efforts.",
+    "tags": ["brand", "management", "consistency", "guidelines", "team-access"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-user-management-006",
+    "type": "release-notes",
+    "questions": "How do I manage team permissions? What user roles are available? Can I control who edits campaigns? How do I set up team access?",
+    "answer": "📅 **April 7, 2025 - Advanced User Management**\n\nWe've introduced three user roles to help you control who does what:\n\n• **Viewer** - Can monitor performance and view campaigns\n• **Contributor** - Can draft and edit campaigns\n• **Admin** - Has full publishing and team access rights\n\nThis gives you flexibility without chaos, allowing you to define exactly who can view, edit, or publish your campaigns based on your team's needs.",
+    "tags": ["team", "roles", "permissions", "user-management", "access-control"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-timeline-view-007",
+    "type": "release-notes",
+    "questions": "How do I plan campaigns over time? Is there a timeline view? Can I see campaign overlaps? How do I schedule campaigns?",
+    "answer": "📅 **March 18, 2025 - Timeline Campaign View**\n\nYou can now plan campaigns across time with a visual timeline:\n\n• **Drag and Drop** - Move campaigns across weeks or months\n• **See Overlaps** - Spot scheduling conflicts at a glance\n• **Align with Promotions** - Plan around your marketing calendar\n• **Spot Gaps** - Identify scheduling opportunities\n\nThis makes it easy to map out your entire campaign schedule and plan ahead like a pro.",
+    "tags": ["planner", "campaigns", "timeline", "scheduling", "visual-planning"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-2fa-008",
+    "type": "release-notes",
+    "questions": "How do I secure my account? Is two-factor authentication available? How do I enable 2FA? Is my data secure?",
+    "answer": "📅 **March 8, 2025 - Two-Factor Authentication (2FA)**\n\nYour account now supports 2FA for all users:\n\n• **Add Mobile Device** - Use your phone for additional security\n• **Authenticator App** - Use apps like Google Authenticator\n• **Protect Sensitive Data** - Ensure only approved team members can access campaign data\n• **Recommended for Admins** - Especially important for billing users\n\nThis adds a second layer of protection to keep your workspace secure.",
+    "tags": ["security", "2fa", "account", "authentication", "data-protection"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-bulk-upload-009",
+    "type": "release-notes",
+    "questions": "Can I upload multiple files at once? How do I bulk upload creatives? Can I upload many assets quickly? Is there bulk upload for creatives?",
+    "answer": "📅 **February 27, 2025 - Bulk Creative Upload**\n\nYou can now upload and manage creatives in bulk:\n\n• **Drag and Drop Multiple Files** - Upload dozens of assets at once\n• **Direct to Campaigns** - Upload directly into campaign steps\n• **Easy Organization** - Label and assign assets across campaigns\n• **Scale Efficiently** - Perfect for multi-product brands and large teams\n\nThis saves significant time when working with large creative libraries.",
+    "tags": ["productivity", "creative", "assets", "upload", "bulk-operations"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "rn-help-center-010",
+    "type": "release-notes",
+    "questions": "Where can I get help? Is there a help center? How do I find tutorials? Where are the guides?",
+    "answer": "📅 **February 19, 2025 - Smarter Help Center**\n\nWe've redesigned the Help section with better resources:\n\n• **Guided Tutorials** - Step-by-step learning paths\n• **Troubleshooting Wizards** - Interactive problem-solving tools\n• **FAQ Search** - Quick answers to common questions\n• **Lofi Best Practices** - Expert tips and strategies\n\nWhether you're new to Lofi or scaling up, this resource hub is your shortcut to solutions.",
+    "tags": ["support", "help-center", "guides", "tutorials", "troubleshooting"],
+    "last_updated": "2025-09-23"
+  }
+]
+
+

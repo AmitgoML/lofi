@@ -1,0 +1,17 @@
+{
+  "source": "https://support.google.com/analytics/answer/13965727",
+  "qa": [
+    {
+      "questions": [
+        "Why don’t Google Ads and Google Analytics numbers match?",
+        "What causes reporting discrepancies between Ads and Analytics?"
+      ],
+      "answer": "Attribution models, lookback windows, counting logic (clicks vs. sessions vs. users), time zones, data sampling, consent, and conversion configuration differ. Auto‑tagging issues and blocked cookies further widen gaps.",
+      "implication": [
+        "Align time zones, attribution windows, and conversion definitions.",
+        "Verify auto‑tagging and consent mode; implement server‑side tagging where appropriate.",
+        "Use triangulation (platform, Analytics, experiments/MMM) to make budget decisions."
+      ]
+    }
+  ]
+}

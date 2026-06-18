@@ -1,0 +1,30 @@
+{
+  "source": "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/why-every-business-needs-a-full-funnel-marketing-strategy",
+  "qa": [
+    {
+      "questions": [
+        "What is a full‑funnel marketing strategy?",
+        "Why integrate brand building with performance marketing?"
+      ],
+      "answer": "A full‑funnel strategy deliberately connects brand building and performance activation across awareness, consideration, and conversion using shared objectives, integrated planning, and unified measurement. It avoids siloed, short‑term optimization and compounds impact by creating demand and capturing it efficiently.",
+      "implication": [
+        "Align brand and performance teams on shared outcomes and KPIs.",
+        "Build an integrated plan and budget across the funnel; set reallocation rules.",
+        "Use unified measurement (e.g., MMM calibrated with experiments) to read total impact.",
+        "Stand up creative and audience systems that scale across upper‑ and lower‑funnel."
+      ]
+    },
+    {
+      "questions": [
+        "Why is full‑funnel important now?",
+        "What problems does a full‑funnel approach solve?"
+      ],
+      "answer": "Performance channels are maturing, privacy reduces user‑level tracking, and media fragmentation increases. A full‑funnel approach restores growth by balancing short‑term efficiency with long‑term demand creation and gives a more complete read of effectiveness.",
+        "implication": [
+        "Set guardrails for investment balance by lifecycle/seasonality.",
+        "Adopt a KPI ladder and link leading to lagging indicators.",
+        "Institute a quarterly plan‑review to rebalance based on incrementality."
+      ]
+    }
+  ]
+}

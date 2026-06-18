@@ -1,0 +1,76 @@
+[
+  {
+    "id": "onboarding-essentials-overview",
+    "type": "onboarding",
+    "questions": "Lofi Essentials: How do I get started?",
+    "answer": "Welcome to Lofi—your AI-powered platform for creating, managing, and optimizing paid ads across multiple channels. Whether you’re new to digital advertising or a seasoned marketer, Lofi streamlines setup and guides you to launch confidently. At a high level, you will: (1) set up billing to enable spend, (2) connect ad accounts (Meta, Google, TikTok, etc.), (3) create and launch your first campaign with a guided four-step flow, and (4) optionally upload creative assets and define brand settings so AI outputs reflect your visual identity. After launch, monitor results in the Dashboard, filter by date or campaign, and iterate quickly. Lucy, your built-in AI assistant, is available throughout to answer questions and run a pre-launch audit.",
+    "tags": ["onboarding", "getting-started"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "onboarding-prerequisites",
+    "type": "onboarding",
+    "questions": "What do I need before launching my first campaign?",
+    "answer": "Before you begin, gather: (1) Ad accounts on at least one platform (e.g., Meta, Google, TikTok) so you can authorize delivery; (2) A valid payment method (credit or debit card) to cover subscription and service fees; (3) Recommended conversion tracking, such as the Meta Pixel or Google Tag, to measure performance accurately from day one; (4) Optional brand assets—logo, brand colors, fonts, sample images, slogans—to personalize creative; and (5) Optional visual or video creatives to accelerate campaign production. You can proceed without brand assets or existing creatives—Lofi can generate on-brand variants and copy—but providing them improves relevance and speeds up launch.",
+    "tags": ["onboarding", "requirements", "prerequisites"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "onboarding-billing-setup",
+    "type": "onboarding",
+    "questions": "How do I set up billing in Lofi?",
+    "answer": "Go to Settings > Billing to enable spend and activation. Add your payment method (card), confirm your billing address and tax ID (if applicable), and select a plan (Core or Advanced). You can review upcoming charges and download invoices at any time. Lofi uses your card for subscription fees and a service fee based on ad spend. Plans can be cancelled or changed from the Billing section without losing historical data. Tip: Ensure the card has sufficient authorization limits to avoid campaign interruptions.",
+    "tags": ["onboarding", "billing"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "onboarding-connect-ad-accounts",
+    "type": "onboarding",
+    "questions": "How do I connect my ad accounts (Meta, Google, TikTok)?",
+    "answer": "Navigate to Settings > Ad Accounts and click ‘Connect’ next to each platform (Facebook/Instagram, Google, TikTok, and others). Follow the guided authorization flow and confirm the business, ad account, and permissions requested. For best tracking, set up conversion measurement (e.g., Meta Pixel, Google Conversion Tag) immediately after connecting. Need help? Your Lofi Marketing Manager can assist with account linking, permissions, and implementation to ensure accurate attribution from day one.",
+    "tags": ["onboarding", "integrations", "ad-accounts"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "onboarding-create-first-campaign",
+    "type": "onboarding",
+    "questions": "How do I create and launch my first campaign?",
+    "answer": "Go to Campaigns > Create Campaign and follow the four-step wizard: Step 1 (Strategy): choose a goal—Conversions, Traffic, or Awareness—then define your audience (New, Existing, or Website Visitors) and geographic area (zip code, city, or radius). Step 2 (Platforms): choose Social and/or Search, then select channels like Facebook, Instagram, Google, or TikTok, and pick formats (Image, Video, Carousel, Stories, etc.). Step 3 (Creative & Copy): upload/select assets, or generate with AI; write headlines, descriptions, and CTAs; use preview to validate placements. Step 4 (Budget & Launch): choose Standard (date-bounded) or Evergreen (always-on), set daily or total budget, review the summary, and click Launch. Lucy automatically runs a pre-launch audit to catch missing inputs or errors before your ad goes live.",
+    "tags": ["onboarding", "campaigns", "launch"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "onboarding-upload-creatives",
+    "type": "onboarding",
+    "questions": "Should I upload creative assets before launching?",
+    "answer": "Optional but recommended for teams or multi-product brands. In Creative, upload images, videos, and audio, then use search, sorting (newest, oldest, name), and filters (type, usage, favorites) to organize. With the Adobe Express integration, you can design or edit assets within Lofi—apply brand templates, swap logos and colors, and export directly into your library. Lofi can also auto-rotate multiple creatives in a campaign, testing variations and prioritizing top performers over time.",
+    "tags": ["onboarding", "creative", "assets"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "onboarding-brand-settings",
+    "type": "onboarding",
+    "questions": "How do brand settings influence my ads?",
+    "answer": "Visit Settings > Brand to configure your brand profile: upload your logo, colors, and fonts; set your tagline, mission, and tone of voice; and document messaging pillars, copy guidelines, and design dos/don’ts. Use the AI Brand Scanner to pull details from your website. Once completed, these settings inform all AI-generated assets, copy suggestions, and templates—enforcing consistency across teams and channels without extra effort.",
+    "tags": ["onboarding", "brand", "consistency"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "onboarding-dashboard-monitoring",
+    "type": "onboarding",
+    "questions": "How do I monitor and optimize performance after launch?",
+    "answer": "Open the Dashboard for real-time insights. Conversion Performance highlights Impressions, CTR, Clicks, Conversions, and Conversion Value to gauge funnel health and landing page effectiveness. Spend Effectiveness shows Ad Spend, CPM, CPC, Cost per Conversion, and ROAS to evaluate efficiency. Use date range and campaign filters to compare periods or isolate initiatives. Iterate by refreshing creative, testing audiences, and reallocating budget using the 70-20-10 guideline: 70% proven, 20% testing, 10% experimental.",
+    "tags": ["onboarding", "reporting", "optimization"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "onboarding-need-help",
+    "type": "onboarding",
+    "questions": "Where can I get help if I’m stuck?",
+    "answer": "Click Help in the left-hand menu to search the knowledge base, browse common topics, or access tutorials. For instant assistance, click Ask Lucy in the Help header to chat with our AI assistant about campaign setup, integrations, or best practices. You can also contact your Lofi Marketing Manager for one-on-one support, or email support@meetlofi.com.",
+    "tags": ["onboarding", "help", "support", "lucy"],
+    "last_updated": "2025-09-23"
+  }
+]
+
+

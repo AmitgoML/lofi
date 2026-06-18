@@ -1,0 +1,17 @@
+{
+  "source": "https://support.optimizely.com/hc/en-us/articles/4410289058573-Multivariate-tests-for-Optimizely-Web-Experimentation",
+  "qa": [
+    {
+      "questions": [
+        "How do multivariate tests work in Optimizely?",
+        "What are best practices to design MVT in Optimizely?"
+      ],
+      "answer": "Optimizely MVT tests variations across multiple sections simultaneously to discover the best combination. Best practices include limiting factors, ensuring adequate traffic, and predefining success metrics and duration.",
+      "implication": [
+        "Limit the number of factors/levels to keep power achievable.",
+        "Use Optimizely’s calculators for duration and traffic needs.",
+        "Deploy winners to production and archive learnings for templates."
+      ]
+    }
+  ]
+}

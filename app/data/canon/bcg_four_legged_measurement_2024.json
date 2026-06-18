@@ -1,0 +1,17 @@
+{
+  "source": "https://www.bcg.com/publications/2024/four-legged-approach-to-marketing-measurement",
+  "qa": [
+    {
+      "questions": [
+        "What is the four‑legged approach to marketing measurement?",
+        "How should we combine methods to read incrementality?"
+      ],
+      "answer": "Use a portfolio: (1) Experiments (RCT/geo) for ground truth, (2) MMM for long‑run base and budget allocation, (3) MTA/platform models for operational decisions, and (4) Unified business outcomes/holdout calibration to tie reads together.",
+      "implication": [
+        "Set method roles/owners; build a calibration cadence across methods.",
+        "Fund continuous experimentation to anchor MMM and platform reads.",
+        "Use marginal ROI from MMM for budget shifts; validate with tests."
+      ]
+    }
+  ]
+}

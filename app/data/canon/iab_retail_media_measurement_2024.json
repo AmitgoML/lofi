@@ -1,0 +1,17 @@
+{
+  "source": "https://www.iab.com/wp-content/uploads/2024/01/IAB_Retail_Media_Measurement_Guidelines_January2024.pdf",
+  "qa": [
+    {
+      "questions": [
+        "What do the IAB Retail Media Measurement Guidelines cover?",
+        "How should retail media be measured consistently?"
+      ],
+      "answer": "They define standardized metrics, methodology, and transparency requirements for retail media, including on‑site/on‑network placements, attribution, and data hygiene to enable comparable, trusted reads.",
+      "implication": [
+        "Adopt the defined taxonomy and required disclosures in RMN reporting.",
+        "Harden identity, deduplication, and incrementality testing for RMN buys.",
+        "Align KPIs with guidelines to compare across RMNs and channels."
+      ]
+    }
+  ]
+}

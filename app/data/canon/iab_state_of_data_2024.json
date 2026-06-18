@@ -1,0 +1,17 @@
+{
+  "source": "https://www.iab.com/wp-content/uploads/2024/03/IAB-State-of-Data-2024.pdf",
+  "qa": [
+    {
+      "questions": [
+        "What are the key themes in IAB State of Data 2024?",
+        "How should marketers respond to signal loss?"
+      ],
+      "answer": "Privacy shifts drive investment in first‑party data, clean rooms, and modeled conversions. Collaboration and standardized taxonomies are needed to sustain targeting, measurement, and activation.",
+      "implication": [
+        "Build consented first‑party data and interoperable IDs.",
+        "Adopt clean room workflows and data governance for collaboration.",
+        "Calibrate modeled conversions and MMM with experiments."
+      ]
+    }
+  ]
+}

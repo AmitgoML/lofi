@@ -1,0 +1,17 @@
+{
+  "source": "https://www.ftc.gov/system/files/ftc_gov/pdf/p204500_endorsement_guides_in_2023.pdf",
+  "qa": [
+    {
+      "questions": [
+        "What disclosures are required for endorsements and influencer ads?",
+        "How to comply with FTC Endorsement Guides (2023)?"
+      ],
+      "answer": "Advertisers and endorsers must clearly and conspicuously disclose material connections that are not reasonably expected by the audience. Disclosures must be hard to miss, in the same format and context as the endorsement, and understandable to the target audience.",
+      "implication": [
+        "Use simple labels (#ad, Paid Partnership) close to the endorsement; avoid buried disclosures.",
+        "Ensure disclosures persist across formats (video, audio, live, ephemeral).",
+        "Implement contracts and monitoring for influencers; correct or terminate non‑compliance."
+      ]
+    }
+  ]
+}

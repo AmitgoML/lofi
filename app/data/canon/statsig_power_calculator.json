@@ -1,0 +1,17 @@
+{
+  "source": "https://www.statsig.com/calculator",
+  "qa": [
+    {
+      "questions": [
+        "How do we size experiments for power and MDE?",
+        "Which inputs are needed for a power calculator?"
+      ],
+      "answer": "Use baseline rate/variance, desired MDE, significance (alpha), and power (1−beta) to compute required sample size or duration. Calculators translate these into practical run times.",
+      "implication": [
+        "Estimate baseline and variance from recent data; include seasonality.",
+        "Choose alpha/power consistent with risk tolerance (e.g., 0.05 / 0.8+).",
+        "Model multiple metrics to avoid underpowering secondary outcomes."
+      ]
+    }
+  ]
+}

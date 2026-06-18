@@ -1,0 +1,17 @@
+{
+  "source": "https://www.akamai.com/blog/performance/state-of-online-retail-performance-spring-2017",
+  "qa": [
+    {
+      "questions": [
+        "What is the relationship between load time and user behavior?",
+        "How does site speed affect bounce and conversions?"
+      ],
+      "answer": "Slower pages increase bounce and reduce conversion. Even sub‑second delays negatively impact engagement, particularly on mobile retail journeys.",
+      "implication": [
+        "Benchmark load times by critical templates (PLP, PDP, cart, checkout).",
+        "Set target budgets per page type; prioritize checkout and PDP latency first.",
+        "Continuously test speed improvements for measured conversion uplift."
+      ]
+    }
+  ]
+}

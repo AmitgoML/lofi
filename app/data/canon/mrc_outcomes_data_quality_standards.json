@@ -1,0 +1,17 @@
+{
+  "source": "https://mediaratingcouncil.org/sites/default/files/Standards/MRC%20Outcomes%20and%20Data%20Quality%20Standards%20%28Final%29.pdf",
+  "qa": [
+    {
+      "questions": [
+        "What do MRC Outcomes and Data Quality Standards require?",
+        "How do these standards improve outcome measurement?"
+      ],
+      "answer": "They specify transparency, governance, data provenance, identity quality, and methodological disclosures needed to support valid, reliable outcome measurement and accreditation.",
+      "implication": [
+        "Document data lineage, transformations, and model governance for audits.",
+        "Implement QA for identity resolution, deduplication, and bias checks.",
+        "Publish measurement disclosures (limitations, confidence, calibration)."
+      ]
+    }
+  ]
+}

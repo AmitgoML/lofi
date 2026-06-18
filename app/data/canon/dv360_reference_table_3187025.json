@@ -1,0 +1,17 @@
+{
+  "source": "https://support.google.com/displayvideo/table/3187025",
+  "qa": [
+    {
+      "questions": [
+        "What is contained in DV360 reference table 3187025?",
+        "How should practitioners use DV360 reference tables?"
+      ],
+      "answer": "DV360 reference tables provide parameter and setting definitions (e.g., targeting, creative specs, or limits) to ensure correct setup and troubleshooting. They serve as authoritative configuration references.",
+      "implication": [
+        "Consult latest DV360 tables during setup; validate limits and compatibility.",
+        "Align trafficking specs across DSP, ad server, and creative teams.",
+        "Automate checks where possible to prevent configuration errors."
+      ]
+    }
+  ]
+}

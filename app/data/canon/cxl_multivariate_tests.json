@@ -1,0 +1,17 @@
+{
+  "source": "https://cxl.com/blog/multivariate-tests/",
+  "qa": [
+    {
+      "questions": [
+        "What is multivariate testing (MVT) and when to use it?",
+        "How does MVT compare to A/B/n tests?"
+      ],
+      "answer": "MVT tests multiple elements and their interactions simultaneously. It requires large traffic and careful design; use A/B/n when traffic is limited or when isolating a single element is preferred.",
+      "implication": [
+        "Estimate required samples with power; avoid underpowered MVT.",
+        "Prioritize high‑impact areas (hero, headline, CTA, form) for MVT.",
+        "Analyze interactions; promote winning combinations, not isolated parts."
+      ]
+    }
+  ]
+}

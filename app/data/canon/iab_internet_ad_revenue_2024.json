@@ -1,0 +1,17 @@
+{
+  "source": "https://www.iab.com/insights/internet-advertising-revenue-report-full-year-2024/",
+  "qa": [
+    {
+      "questions": [
+        "What are the big shifts in 2024 US digital ad revenue?",
+        "Which formats and channels are growing fastest?"
+      ],
+      "answer": "US digital ad revenue reached new highs with strong growth in retail media, CTV, and short‑form video. Search and social remain largest; privacy and AI shape measurement and optimization.",
+      "implication": [
+        "Evaluate retail media and CTV as part of the mix where audience fit exists.",
+        "Plan creative and measurement for short‑form video environments.",
+        "Harden first‑party data and clean room workflows to support growth areas."
+      ]
+    }
+  ]
+}

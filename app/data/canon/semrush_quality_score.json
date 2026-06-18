@@ -1,0 +1,17 @@
+{
+  "source": "https://www.semrush.com/blog/quality-score/",
+  "qa": [
+    {
+      "questions": [
+        "What is Google Ads Quality Score and why does it matter?",
+        "How can we improve Quality Score?"
+      ],
+      "answer": "Quality Score estimates ad and landing page quality versus peers. Higher scores reduce CPCs and improve ad rank. Drivers include expected CTR, ad relevance, and landing page experience.",
+      "implication": [
+        "Tighten keyword‑ad‑landing page alignment; use SKAG‑like intent clusters.",
+        "Improve landing speed and relevance; optimize headlines and CTAs.",
+        "Prune low‑QS terms or split into more targeted ad groups."
+      ]
+    }
+  ]
+}

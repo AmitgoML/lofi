@@ -1,0 +1,17 @@
+{
+  "source": "https://www.iab.com/guidelines/sellers-json/",
+  "qa": [
+    {
+      "questions": [
+        "What is sellers.json and why does it matter?",
+        "How does sellers.json improve ad supply transparency?"
+      ],
+      "answer": "Sellers.json is a public file that lists authorized sellers and intermediaries of a publisher’s inventory, enabling buyers to verify who is involved in each transaction and reduce fraud.",
+      "implication": [
+        "Publish and maintain accurate sellers.json; ensure DSPs can crawl it.",
+        "Cross‑check with ads.txt/app‑ads.txt to validate supply paths.",
+        "Prefer direct or authorized reseller paths in supply path optimization."
+      ]
+    }
+  ]
+}

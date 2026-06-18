@@ -1,0 +1,17 @@
+{
+  "source": "https://brand-news.it/wp-content/uploads/2023/12/2023-12-ana-programmatic-media-supply-chain-transparency-study.pdf",
+  "qa": [
+    {
+      "questions": [
+        "What did the ANA programmatic transparency study find?",
+        "Where is waste and opacity in the programmatic supply chain?"
+      ],
+      "answer": "Significant spend leakage occurs via non‑viewable/impression waste, made‑for‑advertising sites, and opaque intermediaries. Greater transparency, supply path optimization, and stricter controls are needed.",
+      "implication": [
+        "Implement SPO to prefer direct, high‑quality paths; cut MFA domains.",
+        "Enforce viewability/fraud standards and independent verification.",
+        "Demand log‑level transparency and reconcile against invoices."
+      ]
+    }
+  ]
+}

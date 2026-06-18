@@ -1,0 +1,82 @@
+[
+  {
+    "id": "troubleshooting-campaign-not-launching-001",
+    "type": "troubleshooting",
+    "questions": "My campaign is stuck in SCHEDULED status and won't go LIVE",
+    "answer": "Check if payment has been completed. Unpaid Scheduled campaigns show a Pay action - click it to complete Stripe checkout. Verify your campaign start date hasn't passed and that all required fields are filled. If payment is complete but still not launching, check your ad account connections in Settings > Ad Accounts.",
+    "tags": ["campaigns", "payment", "scheduling"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-payment-failed-002",
+    "type": "troubleshooting",
+    "questions": "My payment failed when trying to launch a campaign",
+    "answer": "Verify your payment method is valid and has sufficient funds. Check your billing address matches your card details. Update payment methods in Settings > Billing > Customer Portal. For Evergreen campaigns, ensure your subscription is active and not past due.",
+    "tags": ["payment", "billing", "subscription"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-google-ads-connection-003",
+    "type": "troubleshooting",
+    "questions": "I can't connect my Google Ads account",
+    "answer": "Ensure you have Admin permissions in your Google Ads account. Clear your browser cache and try the OAuth flow again. Check that your Google account has access to the Google Ads account you're trying to connect. If issues persist, contact support for assistance with the connection process.",
+    "tags": ["integrations", "google-ads", "connections"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-campaign-performance-zero-004",
+    "type": "troubleshooting",
+    "questions": "My dashboard shows zero performance data",
+    "answer": "Check if your campaign is actually LIVE (not just SCHEDULED). Verify your date range includes the campaign's active period. Ensure your ad account connections are working properly. For new campaigns, allow 24-48 hours for data to populate. Check that your targeting isn't too narrow and that your budget is sufficient.",
+    "tags": ["dashboard", "performance", "data"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-compliance-rejections-005",
+    "type": "troubleshooting",
+    "questions": "My ads are being rejected for compliance issues",
+    "answer": "Run compliance checks in Step 3 before launching. Review the compliance report and fix flagged items. Common issues include: prohibited content, misleading claims, inappropriate imagery, or platform policy violations. Ensure your creative and copy align with platform advertising standards. Use Lucy's compliance guidance for specific recommendations.",
+    "tags": ["compliance", "rejections", "creative"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-asset-upload-issues-006",
+    "type": "troubleshooting",
+    "questions": "I can't upload my creative assets",
+    "answer": "Check file format compatibility - Lofi supports common image and video formats. Ensure file size is within limits (typically under 100MB for videos, 10MB for images). Try uploading one file at a time. Clear browser cache and refresh the page. If using Adobe Express, ensure the integration is properly connected.",
+    "tags": ["creative", "assets", "upload"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-lucy-not-responding-007",
+    "type": "troubleshooting",
+    "questions": "Lucy isn't responding or giving helpful answers",
+    "answer": "Try rephrasing your question with more specific details. Ask about specific features or workflows rather than general questions. If Lucy seems stuck, try asking about a different topic and then return to your original question. For complex issues, use the Help section or contact support directly.",
+    "tags": ["lucy", "ai", "support"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-budget-not-spending-008",
+    "type": "troubleshooting",
+    "questions": "My campaign budget isn't being spent",
+    "answer": "Check if your campaign is LIVE and not paused. Verify your daily budget is sufficient for the platform's minimum requirements. Ensure your targeting isn't too narrow - broaden audience or location settings. Check that your ads are approved and not under review. For new campaigns, allow time for the platform to start serving ads.",
+    "tags": ["budget", "spending", "campaigns"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-brand-settings-not-applying-009",
+    "type": "troubleshooting",
+    "questions": "My brand settings aren't being applied to AI-generated content",
+    "answer": "Ensure your brand settings are properly configured in Settings > Brand. Check that you've saved all brand elements (colors, fonts, tone, messaging). Try regenerating content after updating brand settings. Clear any cached content and create new campaigns to see the updated brand application.",
+    "tags": ["brand", "settings", "ai"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "troubleshooting-team-permissions-010",
+    "type": "troubleshooting",
+    "questions": "Team members can't access certain features",
+    "answer": "Check user roles in Settings > User Management. Ensure team members have appropriate permissions for their tasks. Admins can manage all features, Contributors can create campaigns, and Viewers have read-only access. Verify that users are properly invited and have accepted their invitations.",
+    "tags": ["team", "permissions", "access"],
+    "last_updated": "2025-09-23"
+  }
+]

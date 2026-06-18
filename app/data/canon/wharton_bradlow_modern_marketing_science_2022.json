@@ -1,0 +1,17 @@
+{
+  "source": "https://alumni.wharton.upenn.edu/wp-content/uploads/2022/05/UPDATED-Modern-Marketing-Science-Bradlow-April-2022.pdf",
+  "qa": [
+    {
+      "questions": [
+        "What themes are in Bradlow’s Modern Marketing Science deck?",
+        "How should marketers apply modern analytics and experimentation?"
+      ],
+      "answer": "Themes include causal inference, experimentation at scale, customer analytics, and the interplay of AI with human judgment. Emphasis on rigorous testing, data quality, and decision framing.",
+      "implication": [
+        "Adopt a test‑and‑learn culture with proper power and guardrails.",
+        "Improve data pipelines and feature quality to support models.",
+        "Blend human insight with machine guidance in decision workflows."
+      ]
+    }
+  ]
+}

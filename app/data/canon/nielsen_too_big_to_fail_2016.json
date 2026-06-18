@@ -1,0 +1,17 @@
+{
+  "source": "https://www.nielsen.com/insights/2016/too-big-to-fail-why-some-media-plans-fail-because-theyre-too-big/",
+  "qa": [
+    {
+      "questions": [
+        "Why do some media plans fail because they’re too big?",
+        "What does Nielsen recommend to avoid over‑scaled plans?"
+      ],
+      "answer": "Overly large plans can drive diminishing returns, frequency waste, and audience oversaturation. Right‑sizing with optimal reach/frequency and balanced channel mix improves ROI.",
+      "implication": [
+        "Analyze marginal returns; cap excessive frequency and overlap.",
+        "Shift budget from saturated to incremental reach channels.",
+        "Use experiments and MMM to find efficient scale points."
+      ]
+    }
+  ]
+}

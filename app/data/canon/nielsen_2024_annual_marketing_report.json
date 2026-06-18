@@ -1,0 +1,17 @@
+{
+  "source": "https://www.nielsen.com/news-center/2024/nielsen-releases-its-2024-annual-marketing-report-surveying-global-marketers-on-roi-strategies/",
+  "qa": [
+    {
+      "questions": [
+        "What does Nielsen’s 2024 annual report say about ROI priorities?",
+        "How are marketers adapting budgets and measurement?"
+      ],
+      "answer": "Marketers plan to increase investment, especially in digital video and retail media, while focusing on better measurement of ROI amid signal loss. Balancing brand and performance remains a priority.",
+      "implication": [
+        "Evaluate retail media/CTV fit; ensure incrementality reads.",
+        "Invest in data quality and triangulated measurement to guide shifts.",
+        "Maintain brand investment floors alongside performance optimization."
+      ]
+    }
+  ]
+}

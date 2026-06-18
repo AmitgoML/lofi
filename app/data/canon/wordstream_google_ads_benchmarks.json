@@ -1,0 +1,17 @@
+{
+  "source": "https://www.wordstream.com/blog/ws/2023/03/21/google-ads-benchmarks",
+  "qa": [
+    {
+      "questions": [
+        "What are typical Google Ads benchmarks by industry?",
+        "How can we use benchmark CTR/CPA/CVR?"
+      ],
+      "answer": "Benchmarks provide directional CTR, CPC, CVR, and CPA ranges by industry but vary widely by intent, brand share, and creative quality. Use as sanity checks, not targets.",
+      "implication": [
+        "Compare your metrics to relevant industry/intent cohorts, not global medians.",
+        "Focus on incrementality and profit vs. chasing benchmark averages.",
+        "Use outliers to diagnose issues (mismatch, tracking, creative, landing page)."
+      ]
+    }
+  ]
+}

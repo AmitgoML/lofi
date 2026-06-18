@@ -1,0 +1,2127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lucy • Streaming Chat</title>
+  <!-- Markdown rendering & sanitization -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
+  <!-- Chart.js for chart visualization (better browser support than Recharts) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    // Chart.js is available as Chart globally
+    window.ChartJS = Chart;
+    window.ChartJSReady = true;
+    console.log('✅ Chart.js loaded successfully');
+  </script>
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--text);
+           font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; }
+    .container { max-width: 840px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 18px; font-weight: 600; margin: 0 0 16px; }
+    .card { background: var(--card); border:1px solid #1f2937; border-radius:12px; padding:16px; }
+    .row { display:flex; gap:8px; margin-bottom:8px; }
+    .row > * { flex:1; }
+    textarea, input, button, select { background:#0b1220; color:var(--text); border:1px solid #1f2937; border-radius:10px; padding:10px 12px; font-size:14px; }
+    input { height: 40px; }
+    textarea { resize: vertical; min-height: 60px; }
+    button { cursor:pointer; flex:0 0 auto; padding:10px 14px; border:1px solid #334155; }
+    button.primary { background:#0b2642; border-color:#1d4ed8; color:#dbeafe; }
+    button.ghost { background:transparent; color:var(--muted); }
+    button:disabled { opacity:.6; cursor:not-allowed; }
+    .chat { display:flex; flex-direction:column; gap:10px; height:55vh; overflow:auto; border:1px solid #1f2937;
+            border-radius:12px; padding:12px; background:#0a0f1e; }
+    .msg { max-width:80%; padding:10px 12px; border-radius:12px; line-height:1.4; word-wrap:break-word; overflow-wrap:break-word; }
+    .user { align-self:flex-end; background:#1e293b; border:1px solid #334155; }
+    .bot  { align-self:flex-start; background:#0b2642; border:1px solid #1d4ed8; }
+    .muted { color:var(--muted); font-size:12px; }
+    .footer { display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+    .status { font-size:12px; color:var(--muted); }
+    code { background:#0b1220; padding:2px 6px; border-radius:6px; border:1px solid #1f2937; }
+    pre { background:#0b1220; border:1px solid #1f2937; padding:10px; border-radius:8px; overflow:auto; }
+    .msg a { color:#93c5fd; }
+    .msg ul, .msg ol { margin: 0 0 0 1.25rem; }
+    
+    /* Image styling for chat messages */
+    .msg img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 8px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      border: 1px solid #1f2937;
+      display: block;
+    }
+    
+    /* Responsive image sizing */
+    .msg img {
+      max-height: 400px;
+      object-fit: contain;
+    }
+    
+    /* Image loading state */
+    .msg img[src=""] {
+      display: none;
+    }
+    
+    /* Image loading animation */
+    .msg img {
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .msg img:not([src]) {
+      opacity: 0;
+    }
+    
+    /* Image hover effects */
+    .msg img:hover {
+      transform: scale(1.02);
+      transition: transform 0.2s ease-in-out;
+    }
+    
+    /* Ensure images don't break chat layout */
+    
+    /* Chart container styling */
+    .msg .chart-container {
+      width: 100%;
+      max-width: 100%;
+      min-width: 600px;
+      margin: 12px 0;
+      padding: 16px;
+      background: #0b1220;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    
+    .msg .chart-container canvas {
+      width: 100% !important;
+      min-width: 600px;
+      height: 400px !important;
+    }
+    
+    /* Video playback with controls */
+    .msg video {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 8px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      border: 1px solid #1f2937;
+      display: block;
+      background: #0b1220;
+      max-height: 400px;
+      object-fit: contain;
+    }
+    
+    /* Video loading state */
+    .msg video[src=""] {
+      display: none;
+    }
+    
+    /* Accordion styles */
+    .accordion {
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+    
+    .accordion-header {
+      background: #0b1220;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1f2937;
+      transition: background-color 0.2s ease;
+    }
+    
+    .accordion-header:hover {
+      background: #111827;
+    }
+    
+    .accordion-header.active {
+      background: #1e293b;
+    }
+    
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: #0a0f1e;
+    }
+    
+    .accordion-content.active {
+      max-height: 500px;
+    }
+    
+    .accordion-arrow {
+      transition: transform 0.3s ease;
+      color: var(--muted);
+    }
+    
+    .accordion-header.active .accordion-arrow {
+      transform: rotate(180deg);
+    }
+    
+    .param-group {
+      margin-bottom: 12px;
+    }
+    
+    .param-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    
+    .param-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .param-row > * {
+      flex: 1;
+    }
+    
+    /* Vote buttons styling */
+    .vote-buttons {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+      align-items: center;
+    }
+    
+    .vote-btn {
+      background: transparent;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .vote-btn:hover {
+      background: #1f2937;
+      border-color: #4b5563;
+    }
+    
+    .vote-btn.upvote:hover {
+      color: #10b981;
+      border-color: #10b981;
+    }
+    
+    .vote-btn.downvote:hover {
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+    
+    .vote-btn.active.upvote {
+      background: #10b981;
+      border-color: #10b981;
+      color: white;
+    }
+    
+    .vote-btn.active.downvote {
+      background: #ef4444;
+      border-color: #ef4444;
+      color: white;
+    }
+    
+    .vote-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .vote-count {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Lucy • Streaming Chat</h1>
+
+    <div class="card" style="margin-bottom:12px">
+      <div class="row">
+        <input id="apiurl" type="text" placeholder="API URL (e.g., http://localhost:8000)" />
+        <input id="token" type="text" placeholder="JWT Token (optional)" />
+      </div>
+      <div class="row">
+        <input id="userlocation" type="text" placeholder="User Position (optional, e.g., /dashboard/campaigns, /settings/billing)" />
+      </div>
+      <div class="row">
+        <select id="agent" title="Select agent">
+          <option value="" selected>Auto (Router)</option>
+        </select>
+      </div>
+      
+      <!-- Request Parameters Accordion -->
+      <div class="accordion">
+        <div class="accordion-header" id="paramsAccordionHeader">
+          <span>Request Parameters</span>
+          <span class="accordion-arrow">▼</span>
+        </div>
+        <div class="accordion-content" id="paramsAccordionContent">
+          <div style="padding: 12px;">
+            <div class="param-group">
+              <label>Request Type</label>
+              <select id="requestType">
+                <option value="">None</option>
+                <option value="image">Image</option>
+                <option value="video">Video</option>
+              </select>
+            </div>
+            
+            <div class="param-group">
+              <label>Image Parameters</label>
+              <div class="param-row">
+                <select id="imageSize">
+                  <option value="auto">Size: Auto</option>
+                  <option value="square">Size: Square</option>
+                  <option value="landscape">Size: Landscape</option>
+                  <option value="portrait">Size: Portrait</option>
+                  <option value="null">Size: None</option>
+                </select>
+                <select id="imageQuality">
+                  <option value="auto">Quality: Auto</option>
+                  <option value="low">Quality: Low</option>
+                  <option value="medium">Quality: Medium</option>
+                  <option value="high">Quality: High</option>
+                  <option value="null">Quality: None</option>
+                </select>
+              </div>
+              <div class="param-row">
+                <select id="imageBackground">
+                  <option value="auto">Background: Auto</option>
+                  <option value="transparent">Background: Transparent</option>
+                  <option value="opaque">Background: Opaque</option>
+                  <option value="null">Background: None</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="param-group">
+              <label>Video Parameters</label>
+              <div class="param-row">
+                <select id="videoSize">
+                  <option value="16:9">Ratio: 16:9</option>
+                  <option value="9:16">Ratio: 9:16</option>
+                </select>
+                <select id="videoLength">
+                  <option value="4">Length: 4s</option>
+                  <option value="8">Length: 8s</option>
+                  <option value="12">Length: 12s</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="param-group">
+              <label>Custom Parameters (JSON)</label>
+              <textarea id="customParams" placeholder='{"custom_key": "value"}' style="min-height: 60px;"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <button id="newconv" class="primary" title="Create a new conversation on the server">New Conversation</button>
+        <button id="delconv" class="ghost" title="Delete current conversation on the server">Delete</button>
+        <button id="delallconv" class="ghost" title="Delete ALL conversations on the server (cannot be undone)">Delete all</button>
+        <button id="autotitle" class="ghost" title="Generate a title automatically using AI">Generate title</button>
+      </div>
+      <div class="row">
+        <select id="convlist" title="Select conversation (Supabase mode)">
+          <option value="">— Select conversation —</option>
+        </select>
+        <input id="convsearch" type="text" placeholder="Search titles…" title="Filter conversations by title" />
+      </div>
+      <div class="footer">
+        <div>
+          <div class="status" id="status">Idle</div>
+          <div class="muted" id="using">Using: —</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center">
+          <span class="muted" id="sesslabel"></span>
+          <span class="muted" id="titlelabel"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat" id="chat"></div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="row">
+        <input type="text" id="attachmentUrl" placeholder="Attachment URL (e.g., https://example.com/file.jpg)" />
+        <input type="text" id="imageUrl" placeholder="Image URL (for modification)" />
+      </div>
+      <div class="row">
+        <input type="text" id="fileUrl" placeholder="File URL (for analysis)" />
+      </div>
+      <div class="row">
+        <textarea id="message" placeholder="Type a message... (⌘/Ctrl+Enter to send)"></textarea>
+      </div>
+      <div class="footer">
+        <div></div>
+        <div style="display:flex; gap:8px; align-items:center">
+          <button id="reset" class="ghost" title="Start a new session">Reset</button>
+          <button id="stop" class="ghost" disabled>Stop</button>
+          <button id="send" class="primary">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="muted" style="margin-top:10px">
+      Backend endpoints: <code>GET /chat/</code> (history), <code>POST /chat/stream</code> (streaming), <code>GET/POST /conversations/</code>
+    </p>
+  </div>
+
+  <script>
+    const chatEl = document.getElementById('chat');
+    const msgEl = document.getElementById('message');
+    const attachmentUrlEl = document.getElementById('attachmentUrl');
+    const imageUrlEl = document.getElementById('imageUrl');
+    const fileUrlEl = document.getElementById('fileUrl');
+    const agentEl = document.getElementById('agent');
+    const apiUrlEl = document.getElementById('apiurl');
+    const tokenEl = document.getElementById('token');
+    const userLocationEl = document.getElementById('userlocation');
+    const sendBtn = document.getElementById('send');
+    const stopBtn = document.getElementById('stop');
+    const resetBtn = document.getElementById('reset');
+    const newConvBtn = document.getElementById('newconv');
+    const delConvBtn = document.getElementById('delconv');
+    const delAllConvBtn = document.getElementById('delallconv');
+    const autoTitleBtn = document.getElementById('autotitle');
+    const convListEl = document.getElementById('convlist');
+    const statusEl = document.getElementById('status');
+    const sessLabel = document.getElementById('sesslabel');
+    const usingEl = document.getElementById('using');
+    const titleLabel = document.getElementById('titlelabel');
+    const convSearchEl = document.getElementById('convsearch');
+    
+    // Request parameters elements
+    const paramsAccordionHeader = document.getElementById('paramsAccordionHeader');
+    const paramsAccordionContent = document.getElementById('paramsAccordionContent');
+    const requestTypeEl = document.getElementById('requestType');
+    const imageSizeEl = document.getElementById('imageSize');
+    const imageQualityEl = document.getElementById('imageQuality');
+    const imageBackgroundEl = document.getElementById('imageBackground');
+    const videoSizeEl = document.getElementById('videoSize');
+    const videoLengthEl = document.getElementById('videoLength');
+    const customParamsEl = document.getElementById('customParams');
+
+    let controller = null;
+    let conversations = [];
+    // Track in-flight pollers so we don't start multiple polls for the same job_id
+    const videoJobPollers = new Map(); // job_id -> { promise, abortController }
+    // Allow recovering chat content after actions that switch/reset the conversation
+    // (helps avoid the feeling that clicking a "Create" / "New Conversation" button deleted everything)
+    let _lastConversationSnapshot = null; // { sessionId, titleText, chatHtml }
+
+    // --- helpers ---
+    function normalizeUrl(u) {
+      if (!u) return '';
+      const trimmed = u.trim().replace(/\/+$/,'');
+      return trimmed || '';
+    }
+
+    function debounce(fn, wait) {
+      let t = null;
+      return (...args) => {
+        if (t) clearTimeout(t);
+        t = setTimeout(() => fn(...args), wait);
+      };
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function snapshotCurrentConversation() {
+      try {
+        _lastConversationSnapshot = {
+          sessionId: getSessionId(),
+          titleText: titleLabel.textContent || '',
+          chatHtml: chatEl.innerHTML || '',
+        };
+      } catch (_) {
+        _lastConversationSnapshot = null;
+      }
+    }
+
+    function showUndoConversationSwitch() {
+      if (!_lastConversationSnapshot || !_lastConversationSnapshot.chatHtml) return;
+      // Use status area to offer a simple undo without introducing new UI chrome.
+      const prev = statusEl.textContent;
+      statusEl.textContent = 'Switched conversation. Click here to undo.';
+      statusEl.style.cursor = 'pointer';
+      const handler = () => {
+        try {
+          const snap = _lastConversationSnapshot;
+          if (!snap) return;
+          setSessionId(snap.sessionId);
+          // titleLabel textContent already includes the prefix; restore as-is
+          titleLabel.textContent = snap.titleText || '';
+          chatEl.innerHTML = snap.chatHtml || '';
+          setStatus('Restored previous chat view');
+        } finally {
+          statusEl.style.cursor = '';
+          statusEl.removeEventListener('click', handler);
+          // restore prior status text if it existed and we didn't overwrite it elsewhere
+          if (prev && prev !== 'Switched conversation. Click here to undo.') {
+            statusEl.textContent = prev;
+          }
+        }
+      };
+      statusEl.addEventListener('click', handler, { once: true });
+    }
+
+    // --- session id persisted in localStorage ---
+    function newSessionId() {
+      return (crypto.randomUUID && crypto.randomUUID()) || Math.random().toString(36).slice(2);
+    }
+    function getSessionId() {
+      let id = localStorage.getItem('lucy_session_id');
+      if (!id) { id = newSessionId(); localStorage.setItem('lucy_session_id', id); }
+      return id;
+    }
+    function setSessionId(id){
+      localStorage.setItem('lucy_session_id', id);
+      sessLabel.textContent = `session: ${id}`;
+    }
+    function setTitleLabel(title){
+      const t = (title || '').trim();
+      titleLabel.textContent = `title: ${t || 'New chat'}`;
+    }
+
+    // --- url + jwt token persisted in localStorage ---
+    function getApiUrl() {
+      return localStorage.getItem('lucy_api_url') || "http://localhost:8000";
+    }
+    function setApiUrl(url) {
+      const v = normalizeUrl(url) || "http://localhost:8000";
+      localStorage.setItem('lucy_api_url', v);
+      apiUrlEl.value = v;
+      usingEl.textContent = `Using: ${v}`;
+    }
+
+    function getToken() {
+      return localStorage.getItem('lucy_jwt') || "";
+    }
+    function setToken(tok) {
+      const v = tok.trim();
+      localStorage.setItem('lucy_jwt', v);
+      tokenEl.value = v;
+    }
+
+    function getUserLocation() {
+      return localStorage.getItem('lucy_user_location') || "";
+    }
+    function setUserLocation(location) {
+      const v = location.trim();
+      localStorage.setItem('lucy_user_location', v);
+      userLocationEl.value = v;
+    }
+
+    // --- request parameters ---
+    function getRequestParams() {
+      const requestType = requestTypeEl.value;
+      if (!requestType) return null;
+      
+      const params = {};
+      
+      if (requestType === 'image') {
+        const size = imageSizeEl.value;
+        const quality = imageQualityEl.value;
+        const background = imageBackgroundEl.value;
+        
+        if (size !== 'auto') {
+          params.ratio = size === 'null' ? null : size;
+        }
+        if (quality !== 'auto') {
+          params.quality = quality === 'null' ? null : quality;
+        }
+        if (background !== 'auto') {
+          params.bg = background === 'null' ? null : background;
+        }
+      } else if (requestType === 'video') {
+        const size = videoSizeEl.value;
+        const length = videoLengthEl.value;
+        
+        if (size) {
+          params.ratio = size === 'null' ? null : size;
+        }
+        if (length && length !== 'null') {
+          // Send duration as string with "s" suffix (e.g., "4s", "8s", "12s")
+          params.duration = length + "s";
+        }
+      }
+      
+      // Add custom parameters if provided
+      const customParams = customParamsEl.value.trim();
+      if (customParams) {
+        try {
+          const custom = JSON.parse(customParams);
+          Object.assign(params, custom);
+        } catch (e) {
+          console.warn('Invalid custom parameters JSON:', e);
+        }
+      }
+      
+      return Object.keys(params).length > 0 ? params : null;
+    }
+
+    function getRequestType() {
+      return requestTypeEl.value || null;
+    }
+
+    function getAttachments() {
+      const attachmentUrl = attachmentUrlEl.value.trim();
+      const imgUrl = imageUrlEl.value.trim();
+      const fileUrl = fileUrlEl.value.trim();
+      
+      const attachments = [];
+      
+      // Add attachmentUrl if provided
+      if (attachmentUrl) {
+        attachments.push({
+          path: attachmentUrl,
+          url: attachmentUrl
+        });
+      }
+      
+      // Add imageUrl if provided
+      if (imgUrl) {
+        attachments.push({
+          path: imgUrl,
+          url: imgUrl
+        });
+      }
+      
+      // Add fileUrl if provided
+      if (fileUrl) {
+        attachments.push({
+          path: fileUrl,
+          url: fileUrl
+        });
+      }
+      
+      // Return array if any attachments exist, otherwise null
+      return attachments.length > 0 ? attachments : null;
+    }
+
+    function toggleAccordion() {
+      const isActive = paramsAccordionContent.classList.contains('active');
+      if (isActive) {
+        paramsAccordionContent.classList.remove('active');
+        paramsAccordionHeader.classList.remove('active');
+      } else {
+        paramsAccordionContent.classList.add('active');
+        paramsAccordionHeader.classList.add('active');
+      }
+    }
+
+    function appendBubble(text, who, renderHtml=false, messageId=null) {
+      const div = document.createElement('div');
+      div.className = `msg ${who}`;
+      if (renderHtml) {
+        div.innerHTML = text;
+      } else {
+        div.textContent = text;
+      }
+      
+      // Add voting buttons for bot messages
+      if (who === 'bot' && messageId) {
+        const voteContainer = createVoteButtons(messageId);
+        div.appendChild(voteContainer);
+      }
+      
+      chatEl.appendChild(div);
+      chatEl.scrollTop = chatEl.scrollHeight;
+      return div;
+    }
+    
+    function createVoteButtons(messageId) {
+      const voteContainer = document.createElement('div');
+      voteContainer.className = 'vote-buttons';
+      voteContainer.setAttribute('data-message-id', messageId); // Store message ID for easy identification
+      
+      const upvoteBtn = document.createElement('button');
+      upvoteBtn.className = 'vote-btn upvote';
+      upvoteBtn.innerHTML = '👍';
+      upvoteBtn.title = 'Upvote this response (click again to remove vote)';
+      upvoteBtn.onclick = () => toggleVote(messageId, true);
+      
+      const downvoteBtn = document.createElement('button');
+      downvoteBtn.className = 'vote-btn downvote';
+      downvoteBtn.innerHTML = '👎';
+      downvoteBtn.title = 'Downvote this response (click again to remove vote)';
+      downvoteBtn.onclick = () => toggleVote(messageId, false);
+      
+      voteContainer.appendChild(upvoteBtn);
+      voteContainer.appendChild(downvoteBtn);
+      
+      return voteContainer;
+    }
+    
+    function updateVoteButtonsWithRealId(botDiv, realMessageId) {
+      // Find existing vote buttons in the bot message
+      const existingVoteContainer = botDiv.querySelector('.vote-buttons');
+      
+      if (existingVoteContainer) {
+        // Updating existing vote buttons with real message ID
+        
+        // Update the data attribute
+        existingVoteContainer.setAttribute('data-message-id', realMessageId);
+        
+        // Update the onclick handlers
+        const upvoteBtn = existingVoteContainer.querySelector('.upvote');
+        const downvoteBtn = existingVoteContainer.querySelector('.downvote');
+        
+        if (upvoteBtn && downvoteBtn) {
+          upvoteBtn.onclick = () => toggleVote(realMessageId, true);
+          downvoteBtn.onclick = () => toggleVote(realMessageId, false);
+        }
+      }
+    }
+    
+    function toggleVote(messageId, voteType) {
+      // Check current vote state
+      const voteContainer = document.querySelector(`.vote-buttons[data-message-id="${messageId}"]`);
+      if (!voteContainer) return;
+      
+      const upvoteBtn = voteContainer.querySelector('.upvote');
+      const downvoteBtn = voteContainer.querySelector('.downvote');
+      
+      if (!upvoteBtn || !downvoteBtn) return;
+      
+      // Determine current vote state
+      const isUpvoted = upvoteBtn.classList.contains('active');
+      const isDownvoted = downvoteBtn.classList.contains('active');
+      
+      let newVote = null;
+      
+      if (voteType === true) { // Upvote button clicked
+        if (isUpvoted) {
+          // Currently upvoted, remove vote
+          newVote = null;
+        } else {
+          // Not upvoted, set upvote
+          newVote = true;
+        }
+      } else { // Downvote button clicked
+        if (isDownvoted) {
+          // Currently downvoted, remove vote
+          newVote = null;
+        } else {
+          // Not downvoted, set downvote
+          newVote = false;
+        }
+      }
+      
+      // Submit the vote
+      voteOnMessage(messageId, newVote);
+    }
+    
+    async function voteOnMessage(messageId, userFeedback) {
+      const base = getApiUrl();
+      if (!base) return;
+      
+      const conversationId = getSessionId();
+      if (!conversationId) {
+        console.error('No conversation ID available');
+        return;
+      }
+      
+      // Check if this is a temporary streaming ID
+      if (messageId.startsWith('streaming-')) {
+        setStatus('Cannot vote on streaming message yet - please refresh to vote');
+        setTimeout(() => setStatus('Idle'), 2000);
+        return;
+      }
+      
+      const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+      const tok = getToken();
+      if (tok) headers['Authorization'] = `Bearer ${tok}`;
+      
+      try {
+        setStatus('Submitting vote...');
+        
+        const resp = await fetch(`${base}/conversations/${encodeURIComponent(conversationId)}/${messageId}/vote`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ user_feedback: userFeedback }),
+        });
+        
+        if (!resp.ok) {
+          throw new Error(`HTTP ${resp.status}`);
+        }
+        
+        const data = await resp.json();
+        
+        // Update the visual state of the vote buttons
+        updateVoteButtons(messageId, userFeedback);
+        
+        setStatus('Vote submitted');
+        
+        // Clear status after a short delay
+        setTimeout(() => setStatus('Idle'), 1000);
+        
+      } catch (err) {
+        console.error('Error voting on message:', err);
+        setStatus('Error submitting vote');
+        setTimeout(() => setStatus('Idle'), 2000);
+      }
+    }
+    
+    function updateVoteButtons(messageId, userFeedback) {
+      // Find the specific vote buttons for this message using data attribute
+      const voteContainer = document.querySelector(`.vote-buttons[data-message-id="${messageId}"]`);
+      
+      if (voteContainer) {
+        const upvoteBtn = voteContainer.querySelector('.upvote');
+        const downvoteBtn = voteContainer.querySelector('.downvote');
+        
+        if (upvoteBtn && downvoteBtn) {
+          // Remove active state from both buttons
+          upvoteBtn.classList.remove('active');
+          downvoteBtn.classList.remove('active');
+          
+          // Add active state to the voted button (or remove if userFeedback is null)
+          if (userFeedback === true) {
+            upvoteBtn.classList.add('active');
+          } else if (userFeedback === false) {
+            downvoteBtn.classList.add('active');
+          }
+          // If userFeedback is null, no button gets active state (vote removed)
+          
+          // Keep buttons enabled to allow revoting
+          upvoteBtn.disabled = false;
+          downvoteBtn.disabled = false;
+        }
+      }
+    }
+    
+    function loadExistingVoteStates(messages) {
+      // This function is called when loading message history
+      // to set the initial state of vote buttons based on existing votes
+      console.log('Loading vote states for messages:', messages.map(m => ({ message_id: m.message_id, user_feedback: m.user_feedback })));
+      
+      messages.forEach(message => {
+        if (message.user_feedback !== null && message.user_feedback !== undefined) {
+          console.log(`Setting vote state for message ${message.message_id}: ${message.user_feedback}`);
+          
+          // Find the vote buttons for this specific message using data attribute
+          const voteContainer = document.querySelector(`.vote-buttons[data-message-id="${message.message_id}"]`);
+          
+          if (voteContainer) {
+            console.log(`Found vote container for message ${message.message_id}`);
+            const upvoteBtn = voteContainer.querySelector('.upvote');
+            const downvoteBtn = voteContainer.querySelector('.downvote');
+            
+            if (upvoteBtn && downvoteBtn) {
+              // Remove active state from both buttons
+              upvoteBtn.classList.remove('active');
+              downvoteBtn.classList.remove('active');
+              
+              // Add active state to the voted button (or remove if null)
+              if (message.user_feedback === true) {
+                upvoteBtn.classList.add('active');
+                console.log(`Set upvote active for message ${message.message_id}`);
+              } else if (message.user_feedback === false) {
+                downvoteBtn.classList.add('active');
+                console.log(`Set downvote active for message ${message.message_id}`);
+              }
+              // If user_feedback is null, no button gets active state (vote removed)
+              
+              // Keep buttons enabled to allow revoting
+              upvoteBtn.disabled = false;
+              downvoteBtn.disabled = false;
+            }
+          } else {
+            console.log(`No vote container found for message ${message.message_id}`);
+          }
+        }
+      });
+    }
+    function renderMarkdown(md) {
+      if (!window.marked || !window.DOMPurify) return md;
+      const html = marked.parse(md ?? "");
+      const sanitized = DOMPurify.sanitize(html);
+      
+      // Add image loading handlers after sanitization
+      setTimeout(() => {
+        const images = document.querySelectorAll('.msg img');
+        images.forEach(img => {
+          img.addEventListener('error', function() {
+            this.style.display = 'none';
+            const errorDiv = document.createElement('div');
+            errorDiv.textContent = 'Failed to load image';
+            errorDiv.style.color = '#ef4444';
+            errorDiv.style.fontSize = '12px';
+            errorDiv.style.fontStyle = 'italic';
+            this.parentNode.insertBefore(errorDiv, this.nextSibling);
+          });
+          
+          img.addEventListener('load', function() {
+            this.style.opacity = '1';
+          });
+        });
+      }, 0);
+      
+      return sanitized;
+    }
+
+    function setStatus(s) { statusEl.textContent = s; }
+
+    async function pollVideoJobUntilReady(jobId, {
+      expiresInSeconds = 3600,
+      maxWaitMs = 5 * 60 * 1000,
+      initialDelayMs = 1500,
+      maxDelayMs = 8000,
+      signal = null,
+      onUpdate = null,
+    } = {}) {
+      const base = getApiUrl();
+      const headers = { 'Accept': 'application/json' };
+      const tok = getToken();
+      if (tok) headers['Authorization'] = `Bearer ${tok}`;
+
+      const startedAt = Date.now();
+      let delay = initialDelayMs;
+
+      while (Date.now() - startedAt < maxWaitMs) {
+        if (signal?.aborted) throw new Error('Polling aborted');
+
+        const url = `${base}/jobs/video/videos/${encodeURIComponent(jobId)}/status?` +
+          `save_if_ready=true&expires_in_seconds=${encodeURIComponent(expiresInSeconds)}`;
+        const resp = await fetch(url, { headers, signal });
+        if (!resp.ok) throw new Error(`Status poll failed (HTTP ${resp.status})`);
+        const data = await resp.json();
+
+        if (typeof onUpdate === 'function') {
+          try { onUpdate(data); } catch (_) {}
+        }
+
+        if (data && data.error) throw new Error(data.error);
+        if (data && data.ready && data.signed_url) {
+          return { signed_url: data.signed_url, status: data.status, progress: data.progress };
+        }
+
+        await sleep(delay);
+        delay = Math.min(maxDelayMs, Math.floor(delay * 1.35));
+      }
+      throw new Error('Timed out waiting for video to become ready');
+    }
+
+    function ensureVideoFromJob(container, { job_id }) {
+      const wrap = document.createElement('div');
+      wrap.style.margin = '8px 0';
+      wrap.style.padding = '8px';
+      wrap.style.border = '1px solid #1f2937';
+      wrap.style.borderRadius = '8px';
+      wrap.style.backgroundColor = '#0b1220';
+
+      const label = document.createElement('div');
+      label.className = 'muted';
+      label.textContent = `Generating video… (job ${String(job_id).slice(0, 12)}…)`;
+      wrap.appendChild(label);
+
+      const video = document.createElement('video');
+      video.controls = true;
+      video.style.maxWidth = '100%';
+      video.style.height = 'auto';
+      video.style.borderRadius = '8px';
+      video.style.margin = '8px 0 0';
+      video.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+      video.style.border = '1px solid #1f2937';
+      video.style.display = 'none';
+      wrap.appendChild(video);
+
+      container.appendChild(wrap);
+      chatEl.scrollTop = chatEl.scrollHeight;
+
+      if (!videoJobPollers.has(job_id)) {
+        const abortController = new AbortController();
+        const promise = pollVideoJobUntilReady(job_id, {
+          expiresInSeconds: 3600,
+          signal: abortController.signal,
+          onUpdate: (data) => {
+            const pct = (typeof data?.progress === 'number') ? `${data.progress.toFixed(1)}%` : '';
+            const st = (data?.status || '').toString();
+            label.textContent = `Generating video… ${st}${pct ? ' • ' + pct : ''} (job ${String(job_id).slice(0, 12)}…)`;
+          },
+        });
+        videoJobPollers.set(job_id, { promise, abortController });
+      }
+
+      const { promise } = videoJobPollers.get(job_id);
+      promise
+        .then(({ signed_url }) => {
+          label.textContent = 'Video ready';
+          video.src = signed_url;
+          video.style.display = 'block';
+          chatEl.scrollTop = chatEl.scrollHeight;
+        })
+        .catch((err) => {
+          label.textContent = `Video failed: ${err?.message || String(err)}`;
+          label.style.color = '#ef4444';
+        });
+    }
+
+    function displayFileAttachment(container, file) {
+      if (!file) return;
+      
+      // Handle image files
+      if (file.file_type && file.file_type.startsWith('image/')) {
+        if (!file.signed_url) return;
+        const img = document.createElement('img');
+        img.src = file.signed_url;
+        img.alt = file.file_name || 'Generated image';
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
+        img.style.borderRadius = '8px';
+        img.style.margin = '8px 0';
+        img.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+        img.style.border = '1px solid #1f2937';
+        img.style.display = 'block';
+        
+        // Add error handling
+        img.addEventListener('error', function() {
+          this.style.display = 'none';
+          const errorDiv = document.createElement('div');
+          errorDiv.textContent = 'Failed to load image';
+          errorDiv.style.color = '#ef4444';
+          errorDiv.style.fontSize = '12px';
+          errorDiv.style.fontStyle = 'italic';
+          this.parentNode.insertBefore(errorDiv, this.nextSibling);
+        });
+        
+        // Add loading animation
+        img.addEventListener('load', function() {
+          this.style.opacity = '1';
+        });
+        
+        container.appendChild(img);
+        chatEl.scrollTop = chatEl.scrollHeight;
+      } else if (file.file_type && file.file_type.startsWith('video/')) {
+        // Handle video files. If signed_url is missing but job_id exists, poll until ready.
+        if (!file.signed_url && file.job_id) {
+          ensureVideoFromJob(container, { job_id: file.job_id });
+          return;
+        }
+        if (!file.signed_url) return;
+        // Handle video files with a ready signed_url
+        const video = document.createElement('video');
+        video.src = file.signed_url;
+        video.controls = true;
+        video.style.maxWidth = '100%';
+        video.style.height = 'auto';
+        video.style.borderRadius = '8px';
+        video.style.margin = '8px 0';
+        video.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+        video.style.border = '1px solid #1f2937';
+        video.style.display = 'block';
+        
+        // Add error handling
+        video.addEventListener('error', function() {
+          this.style.display = 'none';
+          const errorDiv = document.createElement('div');
+          errorDiv.textContent = 'Failed to load video';
+          errorDiv.style.color = '#ef4444';
+          errorDiv.style.fontSize = '12px';
+          errorDiv.style.fontStyle = 'italic';
+          this.parentNode.insertBefore(errorDiv, this.nextSibling);
+        });
+        
+        container.appendChild(video);
+        chatEl.scrollTop = chatEl.scrollHeight;
+      } else if (file.file_type === 'recharts_data' || (file.file_name && file.file_name.endsWith('.js') && file.file_name.includes('chart'))) {
+        // Handle chart config files (recharts_data type or .js chart files)
+        if (!file.signed_url) return;
+        loadAndRenderChart(container, file.signed_url);
+      } else {
+        // Handle other file types as download links
+        if (!file.signed_url) return;
+        const link = document.createElement('a');
+        link.href = file.signed_url;
+        link.download = file.file_name || 'download';
+        link.textContent = `📎 ${file.file_name || 'Download file'}`;
+        link.style.color = '#93c5fd';
+        link.style.textDecoration = 'none';
+        link.style.display = 'block';
+        link.style.margin = '8px 0';
+        link.style.padding = '8px';
+        link.style.border = '1px solid #1f2937';
+        link.style.borderRadius = '8px';
+        link.style.backgroundColor = '#0b1220';
+        
+        container.appendChild(link);
+        chatEl.scrollTop = chatEl.scrollHeight;
+      }
+    }
+
+    // Wait for Chart.js library to be loaded
+    async function waitForChartLibrary(maxWait = 5000) {
+      const startTime = Date.now();
+      
+      // Check for Chart.js
+      while (true) {
+        const hasChart = typeof Chart !== 'undefined' || typeof window.Chart !== 'undefined' || window.ChartJSReady === true;
+        
+        if (hasChart) {
+          // Ensure Chart is available
+          if (typeof window.Chart === 'undefined' && typeof Chart !== 'undefined') {
+            window.Chart = Chart;
+          }
+          console.log('Chart.js library loaded successfully');
+          return true;
+        }
+        
+        if (Date.now() - startTime > maxWait) {
+          throw new Error('Chart.js library failed to load');
+        }
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
+
+    async function loadAndRenderChart(container, chartUrl) {
+      try {
+        // Wait for Chart.js library to be loaded
+        await waitForChartLibrary();
+
+        // Load the chart config file (now in JSON format)
+        const response = await fetch(chartUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to load chart config: ${response.status}`);
+        }
+        
+        const chartContent = await response.text();
+        
+        // Parse JSON config directly
+        let config;
+        try {
+          config = JSON.parse(chartContent);
+        } catch (e) {
+          // Fallback: try to extract from old JavaScript format for backward compatibility
+          const configMatch = chartContent.match(/const config = ({[\s\S]*?});/);
+          if (configMatch) {
+            config = JSON.parse(configMatch[1]);
+          } else {
+            throw new Error('Invalid chart config format: not valid JSON');
+          }
+        }
+        
+        // Validate config structure
+        if (!config.xKey || !config.series || !config.data) {
+          throw new Error('Invalid chart config: missing xKey, series, or data');
+        }
+        
+        // Create chart container
+        const chartContainer = document.createElement('div');
+        chartContainer.className = 'chart-container';
+        chartContainer.id = 'chart-' + Date.now();
+        
+        // Render chart using Recharts
+        renderRechartsChart(chartContainer, config);
+        
+        container.appendChild(chartContainer);
+        chatEl.scrollTop = chatEl.scrollHeight;
+      } catch (error) {
+        console.error('Error loading chart:', error);
+        const errorDiv = document.createElement('div');
+        errorDiv.textContent = 'Failed to load chart: ' + error.message;
+        errorDiv.style.color = '#ef4444';
+        errorDiv.style.fontSize = '12px';
+        errorDiv.style.padding = '8px';
+        errorDiv.style.margin = '8px 0';
+        errorDiv.style.border = '1px solid #ef4444';
+        errorDiv.style.borderRadius = '8px';
+        container.appendChild(errorDiv);
+      }
+    }
+
+    function renderRechartsChart(container, config) {
+      try {
+        const { xKey, series, data } = config;
+        
+        // Get Chart.js
+        const ChartLib = window.Chart || Chart;
+        if (!ChartLib) {
+          throw new Error('Chart.js library not found');
+        }
+        
+        // Create canvas element for Chart.js
+        const canvas = document.createElement('canvas');
+        canvas.style.width = '100%';
+        canvas.style.minWidth = '600px';
+        canvas.style.height = '400px';
+        container.appendChild(canvas);
+        
+        // Prepare datasets for Chart.js
+        const colors = [
+          'rgb(59, 130, 246)',   // blue
+          'rgb(16, 185, 129)',   // green
+          'rgb(245, 158, 11)',   // amber
+          'rgb(239, 68, 68)',    // red
+          'rgb(139, 92, 246)',   // purple
+          'rgb(6, 182, 212)',    // cyan
+          'rgb(249, 115, 22)',   // orange
+          'rgb(236, 72, 153)'    // pink
+        ];
+        
+        const highValueSeriesIds = new Set(['impressions', 'conversion_value']);
+
+        const datasets = series.map((s, idx) => {
+          const color = colors[idx % colors.length];
+          const originalType = s.type || 'line'; // Original type from config
+          
+          // Chart.js doesn't have "area" type - use "line" with fill: true
+          const chartType = originalType === 'area' ? 'line' : originalType;
+          const isArea = originalType === 'area';
+          
+          const baseConfig = {
+            label: s.label,
+            data: data.map(d => d[s.dataKey]),
+            borderColor: color,
+            backgroundColor: chartType === 'bar' || isArea
+              ? color.replace('rgb', 'rgba').replace(')', ', 0.6)')
+              : chartType === 'line'
+              ? 'transparent'
+              : color,
+            borderWidth: chartType === 'line' ? 2 : 1,
+            tension: chartType === 'line' ? 0.5 : 0, // Increased tension for smoother lines
+            fill: isArea, // Area charts use fill: true
+            cubicInterpolationMode: chartType === 'line' ? 'monotone' : undefined, // Smooth interpolation
+            pointRadius: chartType === 'line' ? 0 : 0,
+            pointHoverRadius: chartType === 'line' ? 4 : 0,
+            pointBackgroundColor: color,
+            pointBorderColor: color,
+            yAxisID: highValueSeriesIds.has((s.id || '').toLowerCase()) ? 'yRight' : 'yLeft'
+          };
+          
+          // Return with the Chart.js compatible type (area becomes line)
+          return { ...baseConfig, type: chartType };
+        });
+        
+        // Determine primary chart type (use first series type, convert area to line)
+        const firstType = series[0]?.type || 'line';
+        const primaryType = firstType === 'area' ? 'line' : firstType;
+        
+        // Create Chart.js chart with mixed types support
+        const labels = data.map(d => d[xKey]);
+        const chartInstance = new ChartLib(canvas, {
+          type: primaryType, // Use the type from the first series
+          data: {
+            labels: labels,
+            datasets: datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                left: 10,
+                right: 10,
+                top: 10,
+                bottom: 10
+              }
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: config.title || 'Campaign Performance',
+                color: '#e5e7eb',
+                font: {
+                  size: 18,
+                  weight: 'bold'
+                },
+                padding: {
+                  top: 4,
+                  bottom: 12
+                }
+              },
+              legend: {
+                labels: {
+                  color: '#e5e7eb',
+                  font: { size: 12 },
+                  usePointStyle: true
+                },
+                position: 'top'
+              },
+              tooltip: {
+                backgroundColor: '#0b1220',
+                titleColor: '#e5e7eb',
+                bodyColor: '#e5e7eb',
+                borderColor: '#1f2937',
+                borderWidth: 1,
+                callbacks: {
+                  label: (ctx) => {
+                    const value = typeof ctx.parsed.y === 'number'
+                      ? ctx.parsed.y.toLocaleString()
+                      : ctx.parsed.y;
+                    return `${ctx.dataset.label}: ${value}`;
+                  }
+                }
+              }
+            },
+            interaction: {
+              mode: 'index',
+              intersect: false
+            },
+            scales: {
+              x: {
+                ticks: { color: '#9ca3af', font: { size: 11 } },
+                grid: { color: '#1f2937' }
+              },
+              yLeft: {
+                position: 'left',
+                ticks: { color: '#9ca3af', font: { size: 11 } },
+                grid: { color: '#1f2937', borderDash: [3, 3] },
+                title: {
+                  display: true,
+                  text: 'Cost / Clicks / Conversions',
+                  color: '#9ca3af',
+                  font: { size: 11 }
+                }
+              },
+              yRight: {
+                position: 'right',
+                ticks: { color: '#9ca3af', font: { size: 11 } },
+                grid: { display: false },
+                title: {
+                  display: true,
+                  text: 'Impressions / Conversion Value',
+                  color: '#9ca3af',
+                  font: { size: 11 }
+                }
+              }
+            }
+          }
+        });
+        
+        // Force chart to resize to container
+        setTimeout(() => {
+          chartInstance.resize();
+        }, 100);
+        
+        // Canvas size already set above
+        
+        console.log('Chart rendered successfully with Chart.js');
+      } catch (error) {
+        console.error('Error rendering chart with Recharts:', error);
+        const errorDiv = document.createElement('div');
+        errorDiv.textContent = 'Chart rendering error: ' + error.message;
+        errorDiv.style.color = '#ef4444';
+        errorDiv.style.fontSize = '12px';
+        errorDiv.style.padding = '8px';
+        errorDiv.style.margin = '8px 0';
+        errorDiv.style.border = '1px solid #ef4444';
+        errorDiv.style.borderRadius = '8px';
+        container.appendChild(errorDiv);
+      }
+    }
+
+    function extractAndRenderCharts(container, text) {
+      // Look for chart URLs in the text (from agent response mentioning chart_configs)
+      // Pattern: chart_url or signed_url containing chart
+      const chartUrlPattern = /(https?:\/\/[^\s\)]+chart[^\s\)]*\.js)/gi;
+      const matches = text.match(chartUrlPattern);
+      
+      if (matches) {
+        matches.forEach(url => {
+          // Check if we've already rendered this chart
+          const existingCharts = container.querySelectorAll('.chart-container');
+          const alreadyRendered = Array.from(existingCharts).some(chart => {
+            return chart.dataset.chartUrl === url;
+          });
+          
+          if (!alreadyRendered) {
+            const chartContainer = document.createElement('div');
+            chartContainer.className = 'chart-container';
+            chartContainer.dataset.chartUrl = url;
+            loadAndRenderChart(chartContainer, url);
+            container.appendChild(chartContainer);
+          }
+        });
+      }
+    }
+
+    // --- pagination state ---
+    let currentPage = 0;
+    let pageSize = 5;
+    let totalItems = 0;
+    let isLoadingHistory = false;
+
+    function hasMorePages() {
+      if (currentPage <= 0) return false;
+      return (currentPage * pageSize) < totalItems;
+    }
+
+
+    async function loadHistoryPaginated(reset = true) {
+      const base = getApiUrl();
+      if (!base) return;
+      const headers = { 'Accept': 'application/json' };
+      const tok = getToken();
+      if (tok) headers['Authorization'] = `Bearer ${tok}`;
+
+      try {
+        isLoadingHistory = true;
+        setStatus('Loading...');
+
+        const nextPage = reset ? 1 : (currentPage + 1);
+        const url = `${base}/chat/?session_id=${encodeURIComponent(getSessionId())}&page=${nextPage}&size=${pageSize}`;
+        const resp = await fetch(url, { headers });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+
+        // Expect shape per fastapi-pagination: { items, total, page, size }
+        const items = Array.isArray(data.items) ? data.items : [];
+        totalItems = typeof data.total === 'number' ? data.total : items.length;
+        pageSize = typeof data.size === 'number' ? data.size : pageSize;
+        currentPage = typeof data.page === 'number' ? data.page : nextPage;
+
+        // Sort by message_order for chronological rendering (oldest->newest)
+        const ordered = items.slice().sort((a, b) => (a.message_order || 0) - (b.message_order || 0));
+        
+        // Debug: Log the received messages to see if user_feedback is included
+        console.log('Received messages from API:', ordered.map(m => ({ 
+          message_id: m.message_id, 
+          role: m.role, 
+          user_feedback: m.user_feedback 
+        })));
+
+        if (reset) {
+          chatEl.innerHTML = '';
+          for (const m of ordered) {
+            const role = m.role === 'user' ? 'user' : 'bot';
+            if (role === 'bot') {
+              const div = appendBubble(renderMarkdown(m.content || ''), role, true, m.message_id);
+              // Handle file attachments for model-files messages (images and videos)
+              // Note: signed_url may be empty initially (e.g. video jobs). displayFileAttachment()
+              // will poll by job_id when applicable.
+              if (m.role === 'model-files' && m.file) {
+                displayFileAttachment(div, m.file);
+              }
+            } else {
+              appendBubble(m.content || '', role, false, m.message_id);
+            }
+          }
+        } else {
+          // Prepend older messages at the top. Insert in reverse so final order is oldest→newest.
+          const prevScrollHeight = chatEl.scrollHeight;
+          const prevScrollTop = chatEl.scrollTop;
+          for (let i = ordered.length - 1; i >= 0; i--) {
+            const m = ordered[i];
+            const div = document.createElement('div');
+            const role = m.role === 'user' ? 'user' : 'bot';
+            div.className = `msg ${role}`;
+            if (role === 'bot') {
+              div.innerHTML = renderMarkdown(m.content || '');
+              // Handle file attachments for model-files messages (images and videos)
+              if (m.role === 'model-files' && m.file) {
+                displayFileAttachment(div, m.file);
+              }
+              // Add voting buttons for bot messages
+              if (m.message_id) {
+                const voteContainer = createVoteButtons(m.message_id);
+                div.appendChild(voteContainer);
+              }
+            } else {
+              div.textContent = m.content || '';
+            }
+            chatEl.insertBefore(div, chatEl.firstChild);
+          }
+          // Preserve scroll position relative to existing content
+          const newScrollHeight = chatEl.scrollHeight;
+          chatEl.scrollTop = newScrollHeight - prevScrollHeight + prevScrollTop;
+        }
+
+        // Load existing vote states for loaded messages
+        loadExistingVoteStates(ordered);
+        setStatus('Idle');
+      } catch (err) {
+        console.warn('Pagination failed, falling back to NDJSON...', err);
+        await loadHistoryNdjson();
+      } finally {
+        isLoadingHistory = false;
+      }
+    }
+
+    async function loadHistoryNdjson() {
+      try {
+        setStatus('Loading...');
+        const base = getApiUrl();
+        if (!base) return;
+        const url = `${base}/chat/?session_id=${encodeURIComponent(getSessionId())}`;
+        const headers = {};
+        const tok = getToken();
+        if (tok) headers['Authorization'] = `Bearer ${tok}`;
+
+        const resp = await fetch(url, { headers });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const text = await resp.text();
+        const lines = text.split('\n').filter(Boolean);
+        chatEl.innerHTML = '';
+        
+        // Parse all messages first, then sort by message_order
+        const messages = [];
+        for (const line of lines) {
+          try {
+            const m = JSON.parse(line);
+            messages.push(m);
+          } catch (_) { /* ignore bad lines */ }
+        }
+        
+        // Sort by message_order for chronological rendering (oldest->newest)
+        messages.sort((a, b) => (a.message_order || 0) - (b.message_order || 0));
+        
+        for (const m of messages) {
+          const role = m.role === 'user' ? 'user' : 'bot';
+            if (role === 'bot') {
+              const div = appendBubble(renderMarkdown(m.content || ''), role, true, m.message_id);
+              // Handle file attachments for model-files messages (images and videos)
+              if (m.role === 'model-files' && m.file) {
+                displayFileAttachment(div, m.file);
+              }
+          } else {
+            appendBubble(m.content || '', role, false, m.message_id);
+          }
+        }
+        
+        // Load existing vote states for loaded messages
+        loadExistingVoteStates(messages);
+        setStatus('Idle');
+        currentPage = 0; totalItems = 0;
+      } catch (err) {
+        console.error(err);
+        setStatus('Error loading history');
+      }
+    }
+
+    async function createConversation(title) {
+      const base = getApiUrl();
+      if (!base) return;
+      const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+      const tok = getToken();
+      if (tok) headers['Authorization'] = `Bearer ${tok}`;
+      try {
+        setStatus('Creating conversation…');
+        snapshotCurrentConversation();
+        const body = title ? { title } : {};
+        const resp = await fetch(`${base}/conversations/`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(body),
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        if (data && data.id) {
+          setSessionId(data.id);
+          setTitleLabel(data.title || title || 'New chat');
+          chatEl.innerHTML = '';
+          await loadHistoryPaginated(true);
+          await loadConversations(data.id);
+          showUndoConversationSwitch();
+          setStatus('New conversation created');
+        } else {
+          setStatus('Failed to create conversation');
+        }
+      } catch (err) {
+        console.error(err);
+        setStatus('Error creating conversation');
+      }
+    }
+
+    async function setTitleAutomatically() {
+      const base = getApiUrl();
+      if (!base) return;
+      const id = getSessionId();
+      if (!id) return;
+      const headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+      const tok = getToken();
+      if (tok) headers['Authorization'] = `Bearer ${tok}`;
+      try {
+        setStatus('Generating title…');
+        const resp = await fetch(`${base}/conversations/${encodeURIComponent(id)}/title`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({}),
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        const title = (data && data.title) ? data.title : 'New chat';
+        setTitleLabel(title);
+        await loadConversations(id);
+        setStatus('Title updated');
+      } catch (err) {
+        console.error(err);
+        setStatus('Error setting title');
+      }
+    }
+
+    async function deleteConversation() {
+      const base = getApiUrl();
+      if (!base) return;
+      const id = getSessionId();
+      if (!id) return;
+      const headers = { 'Accept': 'application/json' };
+      const tok = getToken();
+      if (tok) headers['Authorization'] = `Bearer ${tok}`;
+      try {
+        setStatus('Deleting conversation…');
+        const resp = await fetch(`${base}/conversations/${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+          headers,
+        });
+        if (resp.status !== 204) throw new Error(`HTTP ${resp.status}`);
+        // Create a fresh session id locally and clear chat
+        setSessionId(newSessionId());
+        setTitleLabel('');
+        chatEl.innerHTML = '';
+        currentPage = 0; totalItems = 0;
+        await loadConversations();
+        setStatus('Conversation deleted');
+      } catch (err) {
+        console.error(err);
+        setStatus('Error deleting conversation');
+      }
+    }
+
+    async function deleteAllConversations() {
+      const base = getApiUrl();
+      if (!base) return;
+      const headers = { 'Accept': 'application/json' };
+      const tok = getToken();
+      if (tok) headers['Authorization'] = `Bearer ${tok}`;
+
+      const confirmed = window.confirm(
+        'Delete ALL conversations? This cannot be undone.'
+      );
+      if (!confirmed) return;
+
+      try {
+        setStatus('Deleting all conversations…');
+        snapshotCurrentConversation();
+
+        // Ensure we have the latest list
+        await loadConversations();
+        const ids = (Array.isArray(conversations) ? conversations : [])
+          .map(c => c && c.id)
+          .filter(Boolean);
+
+        for (const id of ids) {
+          try {
+            const resp = await fetch(`${base}/conversations/${encodeURIComponent(id)}`, {
+              method: 'DELETE',
+              headers,
+            });
+            // 204 is expected, but don't hard-fail the whole batch if one fails
+            if (resp.status !== 204) {
+              console.warn('Failed deleting conversation', id, resp.status);
+            }
+          } catch (err) {
+            console.warn('Failed deleting conversation', id, err);
+          }
+        }
+
+        // Reset local state to a fresh session and refresh UI
+        setSessionId(newSessionId());
+        setTitleLabel('');
+        chatEl.innerHTML = '';
+        currentPage = 0; totalItems = 0;
+        await loadConversations();
+        setStatus('All conversations deleted');
+      } catch (err) {
+        console.error(err);
+        setStatus('Error deleting all conversations');
+        showUndoConversationSwitch();
+      }
+    }
+
+    function findConversationById(id) {
+      if (!Array.isArray(conversations)) return null;
+      return conversations.find(c => c && c.id === id) || null;
+    }
+
+    function findConversationByTitle(title) {
+      if (!Array.isArray(conversations)) return null;
+      const t = (title || '').trim();
+      if (!t) return null;
+      return conversations.find(c => (c.title || '').trim() === t) || null;
+    }
+
+    function getConvSearchParams() {
+      const q = (convSearchEl.value || '').trim();
+      return { q };
+    }
+
+    async function loadAgents() {
+      try {
+        const url = `${getApiUrl()}/api/agents`;
+        const headers = {};
+        const tok = getToken();
+        if (tok) headers['Authorization'] = `Bearer ${tok}`;
+        
+        const resp = await fetch(url, { headers });
+        if (!resp.ok) {
+          console.warn('Failed to load agents:', resp.status);
+          return;
+        }
+        
+        const data = await resp.json();
+        
+        // Clear existing options except the first "Auto" option
+        agentEl.innerHTML = '<option value="" selected>Auto (Router)</option>';
+        
+        // Add agents from API
+        if (data.agents && Array.isArray(data.agents)) {
+          data.agents.forEach(agent => {
+            const option = document.createElement('option');
+            option.value = agent.name;
+            option.textContent = agent.description || agent.name;
+            agentEl.appendChild(option);
+          });
+        }
+      } catch (error) {
+        console.warn('Error loading agents:', error);
+      }
+    }
+
+    async function loadConversations(selectId) {
+      const base = getApiUrl();
+      if (!base) return;
+      const headers = { 'Accept': 'application/json' };
+      const tok = getToken();
+      if (tok) headers['Authorization'] = `Bearer ${tok}`;
+      const { q } = getConvSearchParams();
+      try {
+        const qs = new URLSearchParams();
+        if (q) qs.set('q', q);
+        const url = `${base}/conversations/${qs.toString() ? ('?' + qs.toString()) : ''}`;
+        const resp = await fetch(url, { headers });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        conversations = Array.isArray(data) ? data : [];
+        // Rebuild dropdown (use title as selection value when available)
+        convListEl.innerHTML = '';
+        const opt0 = document.createElement('option');
+        opt0.value = '';
+        opt0.textContent = '— Select conversation —';
+        convListEl.appendChild(opt0);
+        for (const c of conversations) {
+          const opt = document.createElement('option');
+          const title = (c.title || '').trim();
+          const value = title || c.id;
+          opt.value = value;
+          opt.textContent = title ? `${title} (${c.id.slice(0,8)})` : `New chat (${c.id.slice(0,8)})`;
+          convListEl.appendChild(opt);
+        }
+        const currentId = selectId || getSessionId();
+        if (currentId) {
+          const found = findConversationById(currentId);
+          if (found) {
+            const title = (found.title || '').trim();
+            convListEl.value = title || found.id;
+            setTitleLabel(title || 'New chat');
+          }
+        }
+      } catch (err) { /* ignore */ }
+    }
+
+    function selectConversation(key) {
+      if (!key) return;
+      let conv = findConversationByTitle(key);
+      if (!conv) conv = findConversationById(key);
+      if (!conv) return;
+      snapshotCurrentConversation();
+      setSessionId(conv.id);
+      setTitleLabel((conv.title || 'New chat').trim());
+      chatEl.innerHTML = '';
+      currentPage = 0; totalItems = 0;
+      loadHistoryPaginated(true);
+      showUndoConversationSwitch();
+    }
+
+    async function streamChat(message, agent) {
+      // Add user bubble
+      appendBubble(message, 'user');
+      // Add bot bubble placeholder we'll append into
+      const botDiv = appendBubble('', 'bot', true);
+      // Inline status bubble (shown until first delta arrives)
+      let statusBubble = null;
+      let botAccum = '';
+      let botMessageId = null; // Track the bot message ID from stream
+
+      controller = new AbortController();
+      stopBtn.disabled = false;
+      sendBtn.disabled = true;
+      resetBtn.disabled = true;
+      apiUrlEl.disabled = true;
+      tokenEl.disabled = true;
+      agentEl.disabled = true;
+      setStatus('Streaming...');
+
+      try {
+        const url = `${getApiUrl()}/chat/stream`;
+        const headers = { 'Content-Type': 'application/json' };
+        const tok = getToken();
+        if (tok) headers['Authorization'] = `Bearer ${tok}`;
+
+        const attachments = getAttachments();
+        const requestBody = {
+          message,
+          session_id: getSessionId(),
+          user_location: getUserLocation() || undefined,
+          request_type: getRequestType(),
+          request_params: getRequestParams(),
+        };
+        
+        // Only include agent if explicitly selected (not null/empty)
+        if (agent) {
+          requestBody.agent = agent;
+        }
+        
+        if (attachments) {
+          requestBody.attachments = attachments;
+        }
+        
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(requestBody),
+          signal: controller.signal,
+        });
+
+        if (!resp.ok || !resp.body) {
+          throw new Error(`HTTP ${resp.status}`);
+        }
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        const statusText = (val) => {
+          switch (val) {
+            case 'started': return 'Thinking…';
+            case 'generating': return 'Answering…';
+            default: return null;
+          }
+        };
+
+        const showStatusInChat = (val) => {
+          const text = statusText(val);
+          if (!text) {
+            // hide for unknown/"completed"
+            if (statusBubble) { chatEl.removeChild(statusBubble); statusBubble = null; }
+            return;
+          }
+          if (!statusBubble) {
+            statusBubble = appendBubble(text, 'bot');
+          } else {
+            statusBubble.textContent = text;
+            chatEl.scrollTop = chatEl.scrollHeight;
+          }
+        };
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          let idx;
+          while ((idx = buffer.indexOf('\n')) >= 0) {
+            const line = buffer.slice(0, idx);
+            buffer = buffer.slice(idx + 1);
+            if (!line) continue;
+            try {
+              const evt = JSON.parse(line);
+              if (evt.type === 'status') {
+                setStatus(evt.value);
+                if (evt.value === 'completed') {
+                  if (statusBubble) { chatEl.removeChild(statusBubble); statusBubble = null; }
+                } else {
+                  showStatusInChat(evt.value);
+                }
+              } else if (evt.type === 'delta') {
+                if (statusBubble) { chatEl.removeChild(statusBubble); statusBubble = null; }
+                botAccum += evt.value;
+                botDiv.innerHTML = renderMarkdown(botAccum);
+                
+                // Check for chart URLs in the response and render them
+                extractAndRenderCharts(botDiv, botAccum);
+                
+                chatEl.scrollTop = chatEl.scrollHeight;
+              } else if (evt.type === 'model_message_id') {
+                // Store the bot message ID for voting buttons
+                botMessageId = evt.value;
+                // Received bot message ID
+                
+                // If streaming is still active, update the vote buttons immediately
+                updateVoteButtonsWithRealId(botDiv, botMessageId);
+              } else if (evt.type === 'file') {
+                if (statusBubble) { chatEl.removeChild(statusBubble); statusBubble = null; }
+                // Handle chart config files (recharts_data type)
+                if (evt.file_type === 'recharts_data' || evt.file_type === 'application/json' || evt.file_type === 'application/javascript' || (evt.file_type && (evt.file_type.includes('json') || evt.file_type.includes('javascript')))) {
+                  loadAndRenderChart(botDiv, evt.signed_url);
+                } else if (evt.file_type && evt.file_type.startsWith('image/')) {
+                  // Use signed_url directly from the streaming response
+                  const imageUrl = evt.signed_url;
+                  
+                  const img = document.createElement('img');
+                  img.src = imageUrl;
+                  img.alt = 'Generated image';
+                  img.style.maxWidth = '100%';
+                  img.style.height = 'auto';
+                  img.style.borderRadius = '8px';
+                  img.style.margin = '8px 0';
+                  img.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+                  img.style.border = '1px solid #1f2937';
+                  img.style.display = 'block';
+                  
+                  // Add error handling
+                  img.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    const errorDiv = document.createElement('div');
+                    errorDiv.textContent = 'Failed to load image';
+                    errorDiv.style.color = '#ef4444';
+                    errorDiv.style.fontSize = '12px';
+                    errorDiv.style.fontStyle = 'italic';
+                    this.parentNode.insertBefore(errorDiv, this.nextSibling);
+                  });
+                  
+                  // Add loading animation
+                  img.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                  });
+                  
+                  botDiv.appendChild(img);
+                  chatEl.scrollTop = chatEl.scrollHeight;
+                } else if (evt.file_type && evt.file_type.startsWith('video/')) {
+                  // Handle video files. If signed_url is missing but job_id exists, poll until ready.
+                  if (!evt.signed_url && evt.job_id) {
+                    ensureVideoFromJob(botDiv, { job_id: evt.job_id });
+                  } else {
+                    const videoUrl = evt.signed_url;
+
+                    const video = document.createElement('video');
+                    video.src = videoUrl;
+                    video.controls = true;
+                    video.style.maxWidth = '100%';
+                    video.style.height = 'auto';
+                    video.style.borderRadius = '8px';
+                    video.style.margin = '8px 0';
+                    video.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.3)';
+                    video.style.border = '1px solid #1f2937';
+                    video.style.display = 'block';
+
+                    // Add error handling
+                    video.addEventListener('error', function() {
+                      this.style.display = 'none';
+                      const errorDiv = document.createElement('div');
+                      errorDiv.textContent = 'Failed to load video';
+                      errorDiv.style.color = '#ef4444';
+                      errorDiv.style.fontSize = '12px';
+                      errorDiv.style.fontStyle = 'italic';
+                      this.parentNode.insertBefore(errorDiv, this.nextSibling);
+                    });
+
+                    botDiv.appendChild(video);
+                    chatEl.scrollTop = chatEl.scrollHeight;
+                  }
+                } else {
+                  // Handle other file types as download links
+                  const link = document.createElement('a');
+                  link.href = evt.signed_url;
+                  link.download = 'download';
+                  link.textContent = `📎 Download file`;
+                  link.style.color = '#93c5fd';
+                  link.style.textDecoration = 'none';
+                  link.style.display = 'block';
+                  link.style.margin = '8px 0';
+                  link.style.padding = '8px';
+                  link.style.border = '1px solid #1f2937';
+                  link.style.borderRadius = '8px';
+                  link.style.backgroundColor = '#0b1220';
+                  
+                  botDiv.appendChild(link);
+                  chatEl.scrollTop = chatEl.scrollHeight;
+                }
+              }
+            } catch (e) {
+              // Ignore malformed lines
+            }
+          }
+        }
+        
+        // Add voting buttons to the completed bot message
+        // Use the real message ID if available, otherwise use a temporary ID
+        const messageIdForVoting = botMessageId || ('streaming-' + Date.now());
+        // Add vote buttons with message ID
+        
+        const voteContainer = createVoteButtons(messageIdForVoting);
+        botDiv.appendChild(voteContainer);
+        
+        // If we have the real message ID, update the vote buttons to use it
+        if (botMessageId) {
+          // Update the data attribute to use the real message ID
+          voteContainer.setAttribute('data-message-id', botMessageId);
+          
+          // Update the onclick handlers to use the real message ID
+          const upvoteBtn = voteContainer.querySelector('.upvote');
+          const downvoteBtn = voteContainer.querySelector('.downvote');
+          if (upvoteBtn && downvoteBtn) {
+            upvoteBtn.onclick = () => toggleVote(botMessageId, true);
+            downvoteBtn.onclick = () => toggleVote(botMessageId, false);
+          }
+        } else {
+          // If we don't have the real message ID yet, set up a listener for when it arrives
+          // No message ID yet, vote buttons will be updated when ID arrives
+          
+          // Set up a timeout to check if the message ID arrives after streaming completes
+          setTimeout(() => {
+            if (botMessageId) {
+              updateVoteButtonsWithRealId(botDiv, botMessageId);
+            }
+          }, 1000);
+        }
+        
+        setStatus('Done');
+      } catch (err) {
+        if (controller?.signal.aborted) {
+          setStatus('Stopped');
+        } else {
+          console.error(err);
+          setStatus('Error');
+          appendBubble(`Error: ${err.message}`, 'bot');
+        }
+      } finally {
+        stopBtn.disabled = true;
+        sendBtn.disabled = false;
+        resetBtn.disabled = false;
+        apiUrlEl.disabled = false;
+        tokenEl.disabled = false;
+        agentEl.disabled = false;
+        if (statusBubble) { chatEl.removeChild(statusBubble); statusBubble = null; }
+        controller = null;
+      }
+    }
+
+    // --- event wiring ---
+    sendBtn.addEventListener('click', () => {
+      const message = msgEl.value.trim();
+      const agent = agentEl.value || null; // null means use router
+      if (!message) return;
+      msgEl.value = '';
+      streamChat(message, agent);
+    });
+
+    stopBtn.addEventListener('click', () => {
+      if (controller) controller.abort();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      snapshotCurrentConversation();
+      setSessionId(newSessionId());
+      setTitleLabel('New chat');
+      chatEl.innerHTML = '';
+      setStatus('New session');
+      currentPage = 0; totalItems = 0;
+      loadHistoryPaginated(true);
+      showUndoConversationSwitch();
+    });
+
+    newConvBtn.addEventListener('click', async () => {
+      await createConversation('');
+    });
+
+    delConvBtn.addEventListener('click', async () => {
+      await deleteConversation();
+    });
+
+    delAllConvBtn.addEventListener('click', async () => {
+      await deleteAllConversations();
+    });
+
+    autoTitleBtn.addEventListener('click', async () => {
+      await setTitleAutomatically();
+    });
+
+    convListEl.addEventListener('change', (e) => {
+      const key = e.target.value;
+      if (key) selectConversation(key);
+    });
+
+    const debouncedSearch = debounce(() => loadConversations(), 250);
+    convSearchEl.addEventListener('input', debouncedSearch);
+
+    msgEl.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        sendBtn.click();
+      }
+    });
+
+    apiUrlEl.addEventListener('change', (e) => setApiUrl(e.target.value));
+    tokenEl.addEventListener('change', (e) => setToken(e.target.value));
+    userLocationEl.addEventListener('change', (e) => setUserLocation(e.target.value));
+    
+    // Accordion and request parameters event listeners
+    paramsAccordionHeader.addEventListener('click', toggleAccordion);
+    
+    // Request type change handler
+    requestTypeEl.addEventListener('change', (e) => {
+      const requestType = e.target.value;
+      // Show/hide relevant parameter sections based on request type
+      const imageParams = document.querySelector('.param-group:nth-child(2)');
+      const videoParams = document.querySelector('.param-group:nth-child(3)');
+      
+      if (requestType === 'image') {
+        imageParams.style.display = 'block';
+        videoParams.style.display = 'none';
+      } else if (requestType === 'video') {
+        imageParams.style.display = 'none';
+        videoParams.style.display = 'block';
+      } else {
+        imageParams.style.display = 'none';
+        videoParams.style.display = 'none';
+      }
+    });
+    
+    // Initialize parameter visibility
+    requestTypeEl.dispatchEvent(new Event('change'));
+    // Infinite scroll: when near the top, load older messages automatically
+    chatEl.addEventListener('scroll', async () => {
+      if (isLoadingHistory) return;
+      if (!hasMorePages()) return;
+      if (chatEl.scrollTop <= 40) {
+        await loadHistoryPaginated(false);
+      }
+    });
+
+    // --- initial boot ---
+    setSessionId(getSessionId());
+    setTitleLabel('New chat');
+    setApiUrl(getApiUrl());
+    setToken(getToken());
+    setUserLocation(getUserLocation());
+    // Prefer paginated JSON; fallback will switch automatically if it fails
+    loadHistoryPaginated(true);
+    // Try to load conversations (if backend supports it)
+    loadConversations();
+    loadAgents();
+  </script>
+</body>
+</html>

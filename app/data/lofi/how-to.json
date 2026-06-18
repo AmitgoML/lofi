@@ -1,0 +1,234 @@
+[
+  {
+    "id": "howto-getting-started-signin-001",
+    "type": "how-to",
+    "questions": "How do I sign in and navigate the Lofi app?",
+    "answer": "Log in to the Lofi app using your credentials. Use the left sidebar to switch between Dashboard, Campaigns, Creative, Help, and Settings. Open or close Lucy (your AI copilot) from the bottom-left 'Ask Lucy' button. Lucy opens in a right drawer you can toggle any time for assistance throughout your workflow.",
+    "tags": ["getting-started", "navigation", "lucy"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-creation-start-002",
+    "type": "how-to",
+    "questions": "How do I start a new campaign?",
+    "answer": "Go to Campaigns → New to begin. You can move forward or backward across steps 1–4 at any time without following them strictly in sequence. Lofi continuously validates required fields and will highlight whatever's missing before launch, ensuring you don't miss any critical information.",
+    "tags": ["campaigns", "creation", "workflow"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-step1-strategy-003",
+    "type": "how-to",
+    "questions": "How do I complete Step 1 - Choose Campaign Strategy?",
+    "answer": "Required fields: Select your Goal (Conversions, Leads, Awareness, etc.), choose Who you're targeting (multiple selections allowed), and pick Where ads should show (one or many locations with global Google Places coverage). Optional but recommended: Describe your goal and audience to improve AI recommendations. You can jump to any step and return without losing progress. Expert Options are available for advanced control throughout the flow.",
+    "tags": ["campaigns", "strategy", "targeting"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-step2-platforms-004",
+    "type": "how-to",
+    "questions": "How do I complete Step 2 - Choose Platforms?",
+    "answer": "Required selections: Choose one Channel (Social, Search, Display, Shopping, Connected TV, Digital Audio), select Platform(s) (Facebook, Instagram, TikTok, Google, Bing, YouTube, LinkedIn, Reddit, Pinterest, Amazon, Yahoo, GDN, Hulu, etc.), and pick Creative type (high-level like Image/Video/Text or specific ad types like Responsive Search Ad, Carousel, Reels, Stories, etc.). Choices are dynamically filtered by your Step 1 goal. For cross-platform campaigns, Lofi manages budget allocation automatically.",
+    "tags": ["campaigns", "platforms", "channels"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-step3-content-005",
+    "type": "how-to",
+    "questions": "How do I complete Step 3 - Create Ad Content?",
+    "answer": "Required elements vary by creative type: Upload or select Creative assets from your library, create using Adobe Express, or ask Lucy to generate. Add Ad copy (headlines, descriptions, CTA, optional keywords for Search). Include Landing page URL for click-through experiences. Use left/right arrows to preview assets. Generate with AI by pasting a product URL to auto-draft headlines/descriptions. CTA options differ by channel. Dynamic requirements: Text ads don't need images, Video ads require video files, Image ads need images. Run compliance checks before launch.",
+    "tags": ["campaigns", "creative", "content"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-step4-launch-006",
+    "type": "how-to",
+    "questions": "How do I complete Step 4 - Launch Campaign?",
+    "answer": "Required fields: Choose Campaign Type (Standard time-bound or Evergreen runs until paused), set Schedule dates (required for Standard), select Budget (Per day or Total), and enter Campaign Name. Configure Campaign Settings toggles: Dynamic Creative Optimization (test creative elements), Dynamic Audience Optimization (test audience segments), Dynamic Budget Allocation (auto-reallocate spend), and Automated Reporting (weekly emails). Click Review and Launch, run Launch Compliance Check, then Approve and Launch to proceed to Stripe checkout for payment.",
+    "tags": ["campaigns", "launch", "settings"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-dashboard-performance-007",
+    "type": "how-to",
+    "questions": "How do I view performance at a glance on the Dashboard?",
+    "answer": "Go to Dashboard and select your date range (e.g., Last 30 days). Key tiles show Impressions, CTR, Clicks, and other metrics. Click any tile to update the trend chart. Use filters to drill into specific campaigns, platforms, or creative types to isolate what's working best.",
+    "tags": ["dashboard", "performance", "analytics"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-performance-interpretation-008",
+    "type": "how-to",
+    "questions": "How do I interpret performance and decide next steps?",
+    "answer": "If CTR is low: test new headlines/images (enable DCO), tighten audience, or refine placements. If CPC is high: broaden audiences/keywords slightly, test alternative ad formats, improve relevance in copy and landing page. If CPM is high on one platform: ensure DBA is on so budget shifts toward better CPM/CPA channels. If CVR is low: check landing page speed/message match, try stronger CTAs, ensure correct event mapping. Use Lucy for immediate suggestions: 'Lucy, analyze my last 14 days and propose 3 quick wins for CPA improvement.'",
+    "tags": ["performance", "optimization", "analysis"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-lucy-benchmarking-009",
+    "type": "how-to",
+    "questions": "How do I benchmark and run competitive checks with Lucy?",
+    "answer": "Ask Lucy specific questions like: 'Show me CTR and CPC benchmarks for Insurance on Facebook vs Google in the US.' 'What creative angles are my top 3 competitors using right now?' 'Is my CPM within industry range for Q4?' Lucy has access to raw performance data and uses benchmarking & competitive-intel tools to provide data-driven insights.",
+    "tags": ["lucy", "benchmarking", "competitive-analysis"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-lucy-audit-010",
+    "type": "how-to",
+    "questions": "How do I run a pre-launch or post-launch audit with Lucy?",
+    "answer": "Pre-launch: In Step 4 click Launch Compliance Check or ask Lucy: 'Run a pre-launch audit for policy and best-practice risks.' Post-launch: Ask Lucy 'Audit my live campaigns and list the top 5 optimization opportunities ranked by ROI impact.' Lucy's Platform Compliance Agent checks against policy and ad-review pitfalls to catch issues early.",
+    "tags": ["lucy", "audit", "compliance"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-lucy-campaign-draft-011",
+    "type": "how-to",
+    "questions": "How do I use Lucy to create a campaign draft?",
+    "answer": "Ask Lucy: 'Create a draft campaign to drive leads in Austin for home insurance. Target homeowners and new movers. Budget $200/day.' Lucy's Campaign Planning Agent will turn your goal/audience inputs into a comprehensive plan, while other agents help with copy, creative suggestions, and compliance checks.",
+    "tags": ["lucy", "campaign-creation", "draft"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-lucy-research-012",
+    "type": "how-to",
+    "questions": "How do I use Lucy for customer and competitor research?",
+    "answer": "Customer research: Ask 'Who are the top segments for auto insurance in California? Give me motivations, objections, and channel preferences.' Competitor research: Ask 'Show me three competitors' ad angles and hook ideas, with examples.' Lucy's specialized agents provide comprehensive market insights and competitive intelligence to inform your strategy.",
+    "tags": ["lucy", "research", "market-analysis"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-lucy-copy-generation-013",
+    "type": "how-to",
+    "questions": "How do I use Lucy to generate ad copy?",
+    "answer": "Ask Lucy: 'Write 10 headlines (≤30 chars) for a Facebook Conversion campaign promoting home insurance savings.' Lucy's Copywriting Agent generates on-brand headlines and descriptions per platform, ensuring consistency with your brand guidelines and platform best practices.",
+    "tags": ["lucy", "copywriting", "ai-generation"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-lucy-creative-generation-014",
+    "type": "how-to",
+    "questions": "How do I use Lucy to generate creative assets?",
+    "answer": "Generate Image: Open Lucy → 'Create image' → pick aspect ratio and quality → describe asset. Generate Video (beta): Open Lucy → 'Create video' → pick 5s/15s, 16:9/1:1 → describe scene and CTA. Save to library from Lucy's message actions. Lucy's Creative Director Agent proposes concepts, shot lists, and hooks while ensuring brand consistency.",
+    "tags": ["lucy", "creative", "ai-generation"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-creative-management-015",
+    "type": "how-to",
+    "questions": "How do I manage creative assets?",
+    "answer": "Go to Creative or add directly in Step 3. Upload images/videos, or save assets from Lucy. Organize versions and reuse across campaigns. Use the Creative Library to filter by type and usage status, mark favorites for quick access, and avoid duplicates by checking campaign usage tags before deleting assets.",
+    "tags": ["creative", "assets", "management"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-ai-copy-from-url-016",
+    "type": "how-to",
+    "questions": "How do I AI-generate ad copy from a product page?",
+    "answer": "In Step 3 click Generate with AI. Paste your product URL and select tone/language preferences. The AI will read the page and draft headlines/descriptions aligned with your brand tone. Save the suggestions to fill headlines/descriptions automatically. You can add more variations using the + buttons beside headlines/descriptions.",
+    "tags": ["ai", "copy", "url-scanning"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-preview-ads-platform-017",
+    "type": "how-to",
+    "questions": "How do I preview ads by platform?",
+    "answer": "In Step 3's Ad preview, change Platform via dropdown to see how your ad will look on different platforms. Use left/right arrows to cycle through assets. The text preview shows the first copy entry. This helps ensure your creative and copy work well across all selected platforms before launch.",
+    "tags": ["preview", "platforms", "creative"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-settings-account-018",
+    "type": "how-to",
+    "questions": "How do I update account details?",
+    "answer": "Go to Settings → Account. Edit name, phone, company, industry, and licensed states (if applicable). Update email or password as needed. In Security Settings, enable Two-Factor Authentication and check Login History for account security monitoring.",
+    "tags": ["settings", "account", "security"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-settings-billing-019",
+    "type": "how-to",
+    "questions": "How do I update billing and download invoices?",
+    "answer": "Go to Settings → Billing. Manage your subscription plan and billing cycle. Update Payment Method and Billing Info as needed. Download Recent Invoices or click View All Invoices to access your billing history. This allows finance/admin teams to directly manage costs without going through support.",
+    "tags": ["settings", "billing", "invoices"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-settings-brand-020",
+    "type": "how-to",
+    "questions": "How do I define my brand for consistent AI output?",
+    "answer": "Go to Settings → Brand. Use the AI Brand Scanner to auto-fill from your website (optional). Configure Brand Strategy (Purpose, Mission, Values, Target Audience, Positioning, Tone), Visuals (Colors, Fonts, Logo, Imagery style), Brand Messaging (Tagline, Key messaging pillars), and Brand Guidelines (Logo usage rules, Copywriting tone, Do's & Don'ts, Keyword blacklist). Click Save Brand Settings. Lucy and generators will follow these definitions for consistent output.",
+    "tags": ["settings", "brand", "ai-consistency"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-settings-ad-accounts-021",
+    "type": "how-to",
+    "questions": "How do I connect ad accounts?",
+    "answer": "Go to Settings → Ad Accounts. Under Available Ad Platforms, click a platform's Connect button. Review the data-sharing note and click Request Connection (some integrations are assisted; the team will finalize your setup). Once connected, the platform appears under Connected Ad Accounts for centralized management.",
+    "tags": ["settings", "ad-accounts", "integrations"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-settings-team-management-022",
+    "type": "how-to",
+    "questions": "How do I invite teammates and set permissions?",
+    "answer": "Go to Settings → User Management. Click Invite User and enter their email. Assign a role: Admin (full access), Reviewer (coming soon - review/approve), Contributor (create & edit campaigns; limited admin), or Viewer (view analytics only). Save the invitation. You can adjust permissions anytime to fit your team's workflow needs.",
+    "tags": ["settings", "team", "permissions"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-draft-save-023",
+    "type": "how-to",
+    "questions": "How do I save a campaign as a draft?",
+    "answer": "In any step of campaign creation, click Save as Draft. Your draft will appear in the Campaigns list where you can return to complete it later. This allows you to work on campaigns over time without losing progress or being forced to complete everything in one session.",
+    "tags": ["campaigns", "draft", "workflow"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-compliance-check-024",
+    "type": "how-to",
+    "questions": "How do I run a compliance check?",
+    "answer": "In Step 4 click Launch Compliance Check or ask Lucy: 'Run a compliance check on this draft.' Lucy's Platform Compliance Agent will check copy/creative for policy violations, industry-specific rules, and platform requirements. Fix any flagged items before launch to avoid disapprovals and wasted spend.",
+    "tags": ["campaigns", "compliance", "audit"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-optimization-toggles-025",
+    "type": "how-to",
+    "questions": "How do I enable dynamic optimizations?",
+    "answer": "In Step 4, toggle on Dynamic Creative Optimization (DCO), Dynamic Audience Optimization (DAO), and/or Dynamic Budget Allocation (DBA) as needed. Remember: with DBA on, Lofi manages cross-platform budget allocation automatically, shifting spend toward better-performing platforms to maximize overall ROAS.",
+    "tags": ["campaigns", "optimization", "settings"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-pause-resume-026",
+    "type": "how-to",
+    "questions": "How do I pause or resume a campaign?",
+    "answer": "Go to Campaigns, open the campaign you want to modify, and toggle Pause/Resume. This allows you to temporarily stop spending without losing your campaign setup. You can resume anytime to restart the campaign with the same settings and budget allocation.",
+    "tags": ["campaigns", "management", "pausing"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-budget-change-027",
+    "type": "how-to",
+    "questions": "How do I change budget type mid-flight?",
+    "answer": "Open the campaign's settings and switch between Per day and Total budget types. Note that changes impact pacing - Lucy can recommend a pacing plan if you ask. Consider the implications of budget changes on campaign performance and allow time for the platform to adjust to new pacing.",
+    "tags": ["campaigns", "budget", "optimization"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-creative-update-028",
+    "type": "how-to",
+    "questions": "How do I update creative or copy on a live campaign?",
+    "answer": "Open the campaign and go to Creative/Ad Sets. Add new assets or copy variations (DCO will automatically test them if enabled). Save changes and the platform will begin testing new creative. Lucy can forecast the impact of changes if you ask for performance predictions.",
+    "tags": ["campaigns", "creative", "updates"],
+    "last_updated": "2025-09-23"
+  },
+  {
+    "id": "howto-campaign-add-locations-029",
+    "type": "how-to",
+    "questions": "How do I target additional locations?",
+    "answer": "Return to Step 1 and add new locations to your targeting. Lofi supports multiple locations globally via Google Places API, so you can search for any city, region, or country. The platform will automatically adjust your campaign to include the new geographic targeting.",
+    "tags": ["campaigns", "targeting", "locations"],
+    "last_updated": "2025-09-23"
+  }
+]

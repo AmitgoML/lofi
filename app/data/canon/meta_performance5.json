@@ -1,0 +1,17 @@
+{
+  "source": "https://www.facebook.com/business/marketing/insights/performance5",
+  "qa": [
+    {
+      "questions": [
+        "What are Meta’s Performance 5 principles?",
+        "How do Performance 5 practices improve outcomes?"
+      ],
+      "answer": "Core practices include: (1) Account simplification and broad targeting, (2) Conversions API to improve signal resilience, (3) Creative diversification and testing, (4) Outcome‑based measurement (experiments/lift), and (5) Adopting business results optimization.",
+      "implication": [
+        "Consolidate structure; use broad with strong signals to exit learning.",
+        "Implement CAPI with deduplication; monitor event match quality.",
+        "Run ongoing creative testing and use lift studies for validation."
+      ]
+    }
+  ]
+}

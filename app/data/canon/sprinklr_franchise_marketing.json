@@ -1,0 +1,17 @@
+{
+  "source": "https://www.sprinklr.com/blog/franchise-marketing/",
+  "qa": [
+    {
+      "questions": [
+        "What makes franchise marketing unique?",
+        "How should brands manage centralized vs. local marketing?"
+      ],
+      "answer": "Franchise systems require consistent brand governance with localized activation. Central teams set strategy, assets, and guardrails; local operators execute channel‑specific tactics tailored to their markets.",
+      "implication": [
+        "Create brand templates, asset libraries, and approval workflows.",
+        "Enable localized targeting and offers within compliance guardrails.",
+        "Consolidate measurement with roll‑up dashboards by location/region."
+      ]
+    }
+  ]
+}

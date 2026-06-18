@@ -1,0 +1,17 @@
+{
+  "source": "https://www.amazon.com/Trustworthy-Online-Controlled-Experiments-Practical/dp/1108724264",
+  "qa": [
+    {
+      "questions": [
+        "What makes online controlled experiments trustworthy?",
+        "What are common pitfalls in A/B testing at scale?"
+      ],
+      "answer": "Trustworthy experiments require sound design (randomization, power, guardrails), high‑quality instrumentation, pre‑registered hypotheses, and robust analysis. Pitfalls include peeking, metric contamination, and novelty/seasonality effects.",
+      "implication": [
+        "Codify experiment review and guardrail metrics; prevent premature stops.",
+        "Instrument high‑quality events; validate with A/A and CUPED where possible.",
+        "Document decision rules and archive learnings to improve future tests."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "source": "https://www.smartinsights.com/marketing-planning/marketing-models/using-the-702010-rule-in-marketing/",
+  "qa": [
+    {
+      "questions": [
+        "What is the 70:20:10 model and why use it?",
+        "What problem does 70:20:10 solve?",
+        "How does it balance proven and experimental work?"
+      ],
+      "answer": "70:20:10 is a portfolio rule for marketing effort and budget that reduces shiny‑object chasing and single‑channel dependency. Roughly 70% goes to proven 'marketing as usual' that reliably meets CPA/ROAS; 20% to emerging, near‑mainstream plays that show promise and are scaling; 10% to experimental or responsive opportunities (e.g., betas, real‑time creative). It creates an explicit learning lane while protecting core performance. The model improves decision hygiene by making promotions/demotions explicit, reduces risk concentration, and ensures the organization continuously explores new growth while funding core engines. It applies not only to paid media but also to creative production, landing‑page/UX work, measurement, and data/ops so supporting capabilities scale in step with media.",
+      "implication": [
+        "Write down concrete examples per bucket for your category (channels, audiences, formats, plays).",
+        "Assign owners and decision rights for promotions/demotions across buckets.",
+        "Keep the 10% ring‑fenced; don’t raid it to patch short‑term targets.",
+        "Tailor the 70/20/10 split by market maturity, seasonality, and margin structure."
+      ]
+    },
+    {
+      "questions": [
+        "What specifically goes into each bucket (70/20/10)?",
+        "Give examples for media and non‑media activities per bucket."
+      ],
+      "answer": "70% = proven, scalable engines (e.g., brand platforms with efficient reach/frequency, paid search on high‑intent terms including brand + top generics, evergreen paid social/shopping, lifecycle CRM/retention, high‑performing landing pages, established remarketing, feed hygiene like titles/images/reviews, and core measurement upkeep). 20% = near‑mainstream opportunities (e.g., new ad formats that are scaling such as Reels/Shorts/carousels/collections, automation/programmatic optimizations in bidding/rotation, audience expansions like LLA 3–5%, incremental geos/segments, creative frameworks showing repeated lift, semi‑automated reporting/QA, and feed/site enhancements with demonstrated ROI). 10% = experiments (e.g., betas/new channels like TikTok Search Ads/retail media pilots, cultural real‑time creative, novel offers/price tests and bundles, new creative genres like UGC styles/interactive/AR, radical LP concepts, and new attribution/measurement methods such as geo‑tests and lift). Include ops and creative work, not just media—design, analytics instrumentation, engineering, and process changes that unlock scale belong in buckets too.",
+      "implication": [
+        "Catalog your current activities by bucket; fill gaps in 10% and 20%.",
+        "Ensure you have creative/ops capacity to execute 10% experiments fast.",
+        "Pre‑write experiment templates (hypothesis, sample size, stop‑loss, decision rule)."
+      ]
+    },
+    {
+      "questions": [
+        "What governance and guardrails should we put in place?",
+        "How do items graduate from 10% → 20% → 70%?"
+      ],
+      "answer": "Use explicit cadences, RACI, and decision thresholds. Weekly: review 10% tests; enforce pre‑registered hypotheses, power/MDE, and stop‑loss rules; promote clear winners into 20% pilots. Monthly: review 20% vs 70% baselines on incremental lift, stability, scalability, and ops cost; decide scale‑up or demote. Quarterly: publish a migration report (10→20→70, retirements), re‑balance mixes by region/product, and refresh the backlog. Guardrails: protect the 10% budget from raids; define minimum evidence (e.g., +X% iROAS with 95% CI for Y weeks) and maximum test duration; cap simultaneous tests to avoid cannibalization; pre‑approve creative/legal guardrails so responsive work ships fast.",
+      "implication": [
+        "Define promotion criteria (e.g., +X% incremental ROAS vs. 70% baseline for Y weeks).",
+        "Define kill criteria (e.g., −X% vs. control with adequate power after Z days).",
+        "Keep a backlog of prioritized tests with owners and decision dates."
+      ]
+    },
+    {
+      "questions": [
+        "How should we measure each bucket and decide reallocations?",
+        "What KPIs and methods link to 70/20/10?"
+      ],
+      "answer": "Measure leading and lagging indicators aligned to bucket purpose. 70%: efficiency/scale (CPA/ROAS, reach/effective frequency, CLV/retention) with MMM for long‑run base effects. 20%: incremental lift vs 70% baselines using controlled tests (geo/RCT) and model calibration (MMM/MTA), plus operational stability. 10%: hypothesis validation (attention, CTR, view‑through, short‑term lift, funnel progression) and learning velocity. Reallocate on marginal incremental returns; promote when iROAS clears threshold and ops are ready; demote/retire when lift is negative/unstable or ops cost outweighs gains. Maintain a KPI ladder (awareness→consideration→intent→conversion→CLV) for consistent progression reads.",
+      "implication": [
+        "Pair controlled tests with modeling to quantify incrementality.",
+        "Use a KPI ladder (awareness → consideration → intent → conversion → CLV) to track progression.",
+        "Document learning per test; archive creative and audience insights."
+      ]
+    },
+    {
+      "questions": [
+        "How do we apply 70:20:10 to content and social?",
+        "What should an editorial mix look like?"
+      ],
+      "answer": "Content: 70% proven utility/evergreen and comparison content; 20% in‑depth frameworks/series that are scaling; 10% experimental formats (interactive tools/AR/new narrative styles). Social: 70% brand‑building/proven post patterns, 20% curated/partner or thought‑leadership content, 10% direct CTA promos and timely culture‑tapped posts. Editorial guardrails: label each asset by bucket, define promotion criteria per format (engagement or conversion deltas), enforce brand asset consistency across platforms, and adopt rapid iteration (templates, weekly creative ops) to continuously feed the 10% lane.",
+      "implication": [
+        "Maintain an editorial calendar labeled by bucket, with promotion criteria per format.",
+        "Use creative templates and rapid iteration to increase the 10% test velocity.",
+        "Promote winning 10% formats into 20%, then 70% as they prove repeatable."
+      ]
+    },
+    {
+      "questions": [
+        "How should the split adapt by seasonality and market maturity?",
+        "When should 70/20/10 deviate from the baseline?"
+      ],
+      "answer": "Adjust mixes to context. Peak seasons or constrained budgets → skew toward 70% to harvest demand efficiently; innovation/entry phases/new product launches → expand 10%/20% to explore and build memory structures; mature, competitive markets → keep disciplined 10% testing to surface pockets of growth and creative angles. Example guardrails: holiday 80/15/5; off‑season 60/25/15; new market entry 50/30/20 time‑boxed. Use market maturity scores and seasonality curves to pre‑set target ranges by region/product; revisit quarterly based on migrations and lift.",
+      "implication": [
+        "Define seasonal guardrails (e.g., holiday: 80/15/5; off‑season: 60/25/15).",
+        "Use market maturity scores to pre‑set target mixes by region or product line.",
+        "Revisit mixes quarterly based on migration and lift outcomes."
+      ]
+    },
+    {
+      "questions": [
+        "What are common pitfalls and anti‑patterns?"
+      ],
+      "answer": "Typical failure modes: raiding the 10% budget to hit short‑term targets; promoting items without sufficient evidence or operational readiness; running underpowered tests or lacking decision rules; chasing vanity metrics over incremental outcomes; fragmenting efforts across too many micro‑tests; and letting legal/brand processes block timely 10% execution due to missing pre‑approved guardrails. Also risky: freezing the mix (no migrations), ignoring ops cost of scaling, and misattributing wins due to last‑click bias.",
+      "implication": [
+        "Protect the 10% budget and pre‑approve creative guardrails to ship fast.",
+        "Require minimum evidence and sample size before promotion decisions.",
+        "Tie evaluation to incremental outcomes, not just clicks or views."
+      ]
+    },
+    {
+      "questions": [
+        "How does 70:20:10 differ for B2B vs. B2C?"
+      ],
+      "answer": "B2B: longer, multi‑stakeholder cycles—70% leans on always‑on capture (search, review sites), ABM programs, lifecycle email/webinars, and high‑intent retargeting; 20% tests thought‑leadership syndication, partner marketplaces, intent‑data activation, and new creative frameworks; 10% explores interactive demos, niche communities, and new formats/channels. Success metrics: pipeline quality/SQO rate/sales velocity and CLV. B2C: higher testing velocity across media/creative; 70% emphasizes reach + high‑intent capture and remarketing; 20% scales new formats/audiences; 10% pursues cultural/UGC experiments and offer/price tests with ROAS/CLV as anchors.",
+      "implication": [
+        "Map buckets to your buying journey (first touch to expansion).",
+        "Include sales enablement and partner motions in bucket planning for B2B.",
+        "Calibrate experiment cycle time by sales cycle length and data latency."
+      ]
+    },
+    {
+      "questions": [
+        "How do we get started implementing 70:20:10 next month?"
+      ],
+      "answer": "Day 0–30: one‑page inventory by bucket; fix instrumentation gaps (pixels, UTMs, goals); define 3× 10% tests with hypotheses, MDE/power, stop‑loss, and owners; choose 2× 20% plays to validate scaling levers; publish decision rules and a bucket dashboard. Day 31–60: run tests; hold weekly 10% reviews and the first monthly migration council; promote/demote per thresholds; harden ops for any 20% winners. Day 61–90: scale proven items into 70% where warranted; publish a quarterly migration/learning report and refresh the backlog. Keep creative and ops capacity reserved for the 10% lane every sprint.",
+      "implication": [
+        "Create a shared tracker: activity, bucket, owner, hypothesis, KPI, decision date.",
+        "Reserve creative/ops time for the 10% lane every sprint.",
+        "Publish a quarterly migration and learning recap to drive accountability."
+      ]
+    }
+  ]
+}
+
+

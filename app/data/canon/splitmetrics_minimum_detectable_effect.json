@@ -1,0 +1,17 @@
+{
+  "source": "https://splitmetrics.com/resources/minimum-detectable-effect-mde/",
+  "qa": [
+    {
+      "questions": [
+        "What is Minimum Detectable Effect (MDE)?",
+        "How to choose MDE for an experiment?"
+      ],
+      "answer": "MDE is the smallest lift you want to be able to detect with chosen power and significance. Smaller MDE needs more samples/time; choose based on business impact worth shipping.",
+      "implication": [
+        "Estimate baseline rates/variance; use calculators for sample size.",
+        "Avoid underpowered tests; adjust traffic allocation or duration.",
+        "Set decision rules tied to MDE and guardrail metrics."
+      ]
+    }
+  ]
+}

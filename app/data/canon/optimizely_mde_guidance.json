@@ -1,0 +1,17 @@
+{
+  "source": "https://support.optimizely.com/hc/en-us/articles/4410288881293-Use-minimum-detectable-effect-when-designing-an-experiment",
+  "qa": [
+    {
+      "questions": [
+        "What is Minimum Detectable Effect (MDE)?",
+        "Why does MDE matter in experiment design?"
+      ],
+      "answer": "MDE is the smallest true effect size your test is powered to detect at chosen confidence. Lower MDE requires larger samples or longer duration; too‑high MDE risks missing meaningful lifts.",
+      "implication": [
+        "Set MDE based on business impact (e.g., minimum lift worth shipping).",
+        "Use power calculators to size samples/duration before launching.",
+        "Avoid peeking; commit to stop rules to protect Type I/II error."
+      ]
+    }
+  ]
+}

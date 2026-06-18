@@ -1,0 +1,17 @@
+{
+  "source": "https://www.ftc.gov/business-guidance/advertising-marketing/endorsements-influencers-reviews",
+  "qa": [
+    {
+      "questions": [
+        "What are best practices for endorsements, influencers, and reviews?",
+        "How should brands manage influencer compliance?"
+      ],
+      "answer": "Disclose material connections, avoid deceptive claims, and ensure reviews are genuine and not manipulated. Brands are responsible for substantiation and for influencers’ compliance.",
+      "implication": [
+        "Provide influencer briefs with required disclosures and claim substantiation.",
+        "Set review moderation policies that avoid suppression or gating.",
+        "Maintain audit trails (content, disclosures, approvals) for enforcement defense."
+      ]
+    }
+  ]
+}
