@@ -18,8 +18,14 @@ from lofi.schemas.common import AudienceSpec, BudgetSpec, CampaignGoal, Campaign
 
 
 class IntakeField(str, Enum):
+    """Fields a user can fill in via free text or the intake form.
+
+    organization_id is deliberately excluded: it comes from the caller's
+    auth/session context (see run_campaign_workflow), never from the user's
+    free-text request or the intake form.
+    """
+
     BRAND = "brand"
-    ORGANIZATION_ID = "organization_id"
     GOAL = "goal"
     BUDGET = "budget"
     CAMPAIGN_TIMING = "campaign_timing"
@@ -48,6 +54,30 @@ class IntakeDraft(BaseModel):
     )
     platforms: Optional[List[Platform]] = Field(
         default=None, description="Preferred platforms as stated by the user, or filled in via the form"
+    )
+
+
+class ExtractedIntakeFields(BaseModel):
+    """Subset of IntakeDraft fields the LLM is asked to extract from free text.
+
+    Excludes user_request (already known) and organization_id (sourced from
+    the caller's auth/session context, never from the user's text).
+    """
+
+    brand: Optional[str] = Field(default=None, description="Brand the campaign is being run for")
+    goal: Optional[CampaignGoal] = Field(default=None, description="Campaign goal as stated or inferred")
+    budget: Optional[BudgetSpec] = Field(default=None, description="Budget as stated or inferred")
+    campaign_timing: Optional[CampaignTiming] = Field(
+        default=None, description="Campaign timing as stated or inferred"
+    )
+    locations: Optional[List[Location]] = Field(
+        default=None, description="Target locations as stated by the user"
+    )
+    target_audience: Optional[AudienceSpec] = Field(
+        default=None, description="Target audience as stated by the user"
+    )
+    platforms: Optional[List[Platform]] = Field(
+        default=None, description="Preferred platforms as stated by the user"
     )
 
 

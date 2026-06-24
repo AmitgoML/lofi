@@ -21,12 +21,7 @@ class CreativeDirectorAgent:
         self.video_generator = video_generator or VideoGeneratorAgent()
 
     def run(self, state: WorkflowState) -> WorkflowState:
-        director_input = CreativeDirectorInput(
-            creative_brief=state["creative_brief"],
-            performance_analysis=state["performance_insights"],
-        )
-        state["creative_director_output"] = self.produce_assets(director_input)
-        return state
+        raise NotImplementedError
 
     def produce_assets(self, director_input: CreativeDirectorInput) -> CreativeDirectorOutput:
         raise NotImplementedError

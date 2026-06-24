@@ -7,7 +7,7 @@ Approval and the Persistence Layer.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
@@ -51,7 +51,7 @@ class FinalCampaignProposal(BaseModel):
     copy_assets: TextAsset = Field(description="Final set of ad copy assets")
     qa_result: QAAgentOutput = Field(description="QA validation result for this proposal")
     created_at: datetime = Field(
-        default_factory=datetime.utcnow, description="Timestamp the proposal was assembled"
+        default_factory=lambda: datetime.now(timezone.utc), description="Timestamp the proposal was assembled"
     )
     requires_human_review: bool = Field(
         default=True, description="Whether this proposal must go through human Review & Approval before persisting"

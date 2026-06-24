@@ -21,7 +21,7 @@ from lofi.schemas.common import (
     Platform,
     QAStatus,
 )
-from lofi.schemas.intake import IntakeField, IntakeFormRequest, IntakeFormSubmission
+from lofi.schemas.intake import IntakeDraft, IntakeField, IntakeFormRequest
 from lofi.schemas.creative_director import (
     AssetDecision,
     AssetRef,
@@ -72,7 +72,7 @@ __all__ = [
     "CampaignPlannerInput",
     "FinalCampaignProposal",
     "CampaignPlannerOutput",
+    "IntakeDraft",
     "IntakeField",
     "IntakeFormRequest",
-    "IntakeFormSubmission",
 ]

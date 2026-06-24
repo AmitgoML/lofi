@@ -1,26 +1,83 @@
-"""Supabase persistence: campaigns and reference metric tables."""
+"""Supabase persistence: campaigns and reference metric tables.
+
+Workflow-state persistence (pause/resume across requests) is the LangGraph
+checkpointer's job now, not this client's - see api/app.py.
+"""
+
+from datetime import date, timedelta
+
+from supabase import Client, create_client
+
+from lofi.config.settings import Settings
 
 
 class SupabaseClient:
     """Reads/writes campaigns, campaign_*_metrics, and workflow state tables."""
 
-    def get_platform_metrics(self, organization_id: str) -> list[dict]:
-        raise NotImplementedError
+    def __init__(self, settings: Settings, client: Client | None = None) -> None:
+        self._client = client or create_client(settings.supabase_url, settings.supabase_key)
 
-    def get_location_metrics(self, organization_id: str) -> list[dict]:
-        raise NotImplementedError
+    def get_platform_metrics(self, organization_id: str, lookback_days: int = 90) -> list[dict]:
+        since = (date.today() - timedelta(days=lookback_days)).isoformat()
+        response = (
+            self._client.table("campaign_platform_metrics")
+            .select("*")
+            .eq("organization_id", organization_id)
+            .gte("date", since)
+            .execute()
+        )
+        return response.data
+
+    def get_location_metrics(self, organization_id: str, lookback_days: int = 90) -> list[dict]:
+        since = (date.today() - timedelta(days=lookback_days)).isoformat()
+        response = (
+            self._client.table("campaign_location_metrics")
+            .select("*, brand_locations(name, address, timezone)")
+            .eq("organization_id", organization_id)
+            .gte("date", since)
+            .execute()
+        )
+        return response.data
 
     def get_audience_metrics(self, organization_id: str) -> list[dict]:
-        raise NotImplementedError
+        # campaign_audience_metrics carries no organization_id of its own; it's scoped
+        # to the org via the owning campaign.
+        response = (
+            self._client.table("campaign_audience_metrics")
+            .select("*, campaigns!inner(organization_id)")
+            .eq("campaigns.organization_id", organization_id)
+            .execute()
+        )
+        return response.data
 
     def get_creative_metrics(self, organization_id: str) -> list[dict]:
-        raise NotImplementedError
+        # campaign_creative_metrics carries no organization_id of its own; it's scoped
+        # to the org via the owning creative asset.
+        response = (
+            self._client.table("campaign_creative_metrics")
+            .select("*, creative_assets!inner(org_id, asset_type)")
+            .eq("creative_assets.org_id", organization_id)
+            .execute()
+        )
+        return response.data
 
     def save_campaign(self, campaign_proposal: dict) -> str:
-        raise NotImplementedError
-
-    def save_workflow_state(self, workflow_id: str, state: dict) -> None:
-        raise NotImplementedError
-
-    def load_workflow_state(self, workflow_id: str) -> dict:
-        raise NotImplementedError
+        plan = campaign_proposal["campaign_plan"]
+        audience = plan["audience"]
+        budget = plan["budget"]
+        row = {
+            "organization_id": campaign_proposal["organization_id"],
+            "goal": plan["goal"],
+            "campaign_type": plan["campaign_type"],
+            # campaign_channel has no corresponding field in CampaignPlan; left
+            # for whatever downstream process classifies channel from platforms.
+            "ad_platforms": plan["platforms"],
+            "locations": plan["locations"],
+            "age_ranges": [audience["age_min"], audience["age_max"]],
+            "gender": audience["genders"],
+            "interests": [],
+            "daily_budget_cents": round(budget["daily_budget"] * 100) if budget.get("daily_budget") else None,
+            "total_budget_cents": round(budget["total_budget"] * 100),
+        }
+        response = self._client.table("campaigns").insert(row).execute()
+        return response.data[0]["id"]
