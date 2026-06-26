@@ -7,10 +7,38 @@ The Creative Director Agent sits between the **Performance Analyst** and the fin
 | Slot | What it is | How it's produced |
 |------|-----------|-------------------|
 | **Slot 1 — Recommended** | Best-performing historical asset | Surfaced from PerformanceAnalyst — no generation, just the `asset_id` reference |
-| **Slot 2 — Variant A** | Brand-hero image | Generated fresh by Titan Image Generator v2 |
-| **Slot 3 — Variant B** | Lifestyle/context image | Generated fresh by Titan Image Generator v2 |
+| **Slot 2 — Variant A** | Brand-hero image | Generated fresh by Bedrock image model |
+| **Slot 3 — Variant B** | Lifestyle/context image | Generated fresh by Bedrock image model |
 
 The agent also generates ad copy (headlines, descriptions, CTA, hooks) and determines the overall creative strategy.
+
+---
+
+## Orchestration Flow
+
+```
+CreativeDirectorAgent.produce_assets()
+  │
+  ├─ 1. Claude → CreativeStrategy
+  │         Receives: creative brief + full brand data + performance insights
+  │         Outputs:  variant_a.image_prompt, variant_b.image_prompt
+  │                   (self-contained prompts with all brand visuals embedded inline)
+  │
+  ├─ 2. ImageGeneratorAgent.generate(prompt=variant_a.image_prompt, ...)
+  │         → one image per platform → uploaded to S3 → list[AssetRef]
+  │
+  ├─ 3. ImageGeneratorAgent.generate(prompt=variant_b.image_prompt, ...)
+  │         → one image per platform → uploaded to S3 → list[AssetRef]
+  │
+  └─ 4. CopywriterAgent.generate(audience, goal, platform, offer, brand_data)
+              │
+              └─ CopywriterAgent builds its OWN prompt internally (copy_generation_v1)
+                 → Claude → TextAsset (headlines, descriptions, CTA, hooks, keywords)
+```
+
+> The Creative Director does **not** build the copywriter's prompt — it passes raw inputs
+> (brief fields + brand data). The copywriter assembles its own prompt independently.
+> Steps 2, 3, and 4 each make a separate Bedrock call.
 
 ---
 
@@ -57,15 +85,17 @@ All fields are mapped into a `BrandRow` Pydantic model (`persistence/models.py`)
 
 ### 3. Determine Creative Strategy (Claude Sonnet via Bedrock)
 
-The agent sends a detailed prompt to **Claude Sonnet 4.5** (via `BedrockClient.extract_structured`) asking it to output a structured `CreativeStrategy`.
+The agent sends a detailed prompt to **Claude Sonnet** (via `BedrockClient.extract_structured`) asking it to output a structured `CreativeStrategy`.
 
 The prompt (`prompts/creative_director.py :: creative_strategy_v1`) includes:
-- Full brand profile (colors, imagery style, logo rules, dos/don'ts)
-- Campaign brief (goal, platforms, audience, offer)
-- Historical performance insights (top platforms, formats, audience segments)
+- Full brand profile: colors, imagery style, logo assets, reference images, design elements, fonts, logo usage rules, core values, dos/don'ts, prohibited keywords, goal config
+- Campaign brief: goal, platforms, audience, offer
+- Historical performance insights: top platforms, formats, audience segments
 - Existing assets available for reuse
 
 Claude is forced via **tool-use** to return a structured `CreativeStrategy` object. No free-text parsing needed.
+
+The `image_prompt` inside each `ABVariant` is a self-contained, richly descriptive string — it is the **only** input the image model receives, so Claude must embed all brand visual details (colors, imagery style, design elements, font mood, logo placement, product context) directly into the prompt text.
 
 #### CreativeStrategy output:
 ```
@@ -100,7 +130,7 @@ Real A/B testing in paid media tests one variable at a time. The two variants ar
 
 The `ImageGeneratorAgent` is called **twice** with the prompts from Claude's strategy.
 
-Model: `amazon.titan-image-generator-v2:0` via **AWS Bedrock**.
+Model: configured via `IMAGE_MODEL_ID` env var (e.g. `amazon.nova-canvas-v1:0`) via **AWS Bedrock**.
 
 For each variant, one image is generated **per platform** in the campaign brief:
 
@@ -111,7 +141,7 @@ For each variant, one image is generated **per platform** in the campaign brief:
 | GOOGLE | 1024 × 576 (~16:9 horizontal) |
 | SPOTIFY | 640 × 640 (1:1 square) |
 
-All dimensions are multiples of 64 (Titan requirement, range 320–4096px).
+All dimensions are multiples of 64 (Nova Canvas requirement, range 320–4096px).
 
 Each generated image is uploaded to **S3** immediately:
 ```
