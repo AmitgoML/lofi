@@ -10,6 +10,7 @@ from lofi.api.routes import router
 from lofi.config.settings import Settings
 from lofi.graph.workflow_graph import build_campaign_workflow_graph
 from lofi.llm.bedrock_client import BedrockClient
+from lofi.persistence.s3_storage import S3CreativeStorage
 from lofi.persistence.supabase_client import SupabaseClient
 
 
@@ -18,6 +19,7 @@ async def lifespan(app: FastAPI):
     settings = Settings.from_env()
     supabase_client = SupabaseClient(settings)
     bedrock_client = BedrockClient(settings)
+    s3_storage = S3CreativeStorage(settings)
 
     # MemorySaver checkpoints interrupt()-paused workflows (intake form,
     # human review) in-process only - state is lost on restart and unsafe
@@ -28,9 +30,10 @@ async def lifespan(app: FastAPI):
 
     app.state.supabase_client = supabase_client
     app.state.bedrock_client = bedrock_client
-    app.state.compiled_graph = build_campaign_workflow_graph(supabase_client, bedrock_client).compile(
-        checkpointer=checkpointer
-    )
+    app.state.s3_storage = s3_storage
+    app.state.compiled_graph = build_campaign_workflow_graph(
+        supabase_client, bedrock_client, s3_storage
+    ).compile(checkpointer=checkpointer)
     # Background graph runs can fail (agent/LLM/Supabase errors); since
     # there's no "FAILED" concept in LangGraph's own checkpoint state, the
     # background task records it here for GET /campaigns/{id} to surface.

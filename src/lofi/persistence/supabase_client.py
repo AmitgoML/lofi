@@ -9,6 +9,7 @@ from datetime import date, timedelta
 from supabase import Client, create_client
 
 from lofi.config.settings import Settings
+from lofi.persistence.models import BrandRow
 
 
 class SupabaseClient:
@@ -60,6 +61,35 @@ class SupabaseClient:
             .execute()
         )
         return response.data
+
+    def get_brand(self, brand_id: str) -> BrandRow:
+        response = (
+            self._client.table("brands")
+            .select(
+                "brand_id, brand_name, brand_description, brand_audiences, product_descriptions,"
+                " brand_primary_color, brand_secondary_color, brand_logos, brand_reference_images,"
+                " brand_imagery_style, brand_design_elements, brand_heading_font, brand_body_font,"
+                " brand_logo_usage_rules, brand_dos_and_donts, brand_goal_config,"
+                " brand_tone_of_voice, brand_copywriting_tone, brand_keyword_blacklist,"
+                " brand_core_values, brand_messaging_pillars, brand_tagline,"
+                " brand_positioning, brand_competitors"
+            )
+            .eq("brand_id", brand_id)
+            .single()
+            .execute()
+        )
+        return BrandRow(**{k: v for k, v in response.data.items() if v is not None or k in ("brand_id", "brand_name")})
+
+    def get_brand_by_name(self, brand_name: str, organization_id: str) -> dict | None:
+        response = (
+            self._client.table("brands")
+            .select("brand_id, brand_name")
+            .eq("brand_name", brand_name)
+            .eq("associated_organization_id", organization_id)
+            .limit(1)
+            .execute()
+        )
+        return response.data[0] if response.data else None
 
     def save_campaign(self, campaign_proposal: dict) -> str:
         plan = campaign_proposal["campaign_plan"]

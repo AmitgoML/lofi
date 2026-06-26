@@ -89,7 +89,11 @@ class PerformanceAnalystAgent:
             brand=brief.brand,
             organization_id=brief.organization_id,
         )
-        state["performance_insights"] = self.analyze(analyst_input)
+        output = self.analyze(analyst_input)
+        brand_row = self._supabase_client.get_brand_by_name(brief.brand, brief.organization_id)
+        if brand_row:
+            output = output.model_copy(update={"brand_id": brand_row["brand_id"]})
+        state["performance_insights"] = output
         return state
 
     def analyze(self, analyst_input: PerformanceAnalystInput) -> PerformanceAnalystOutput:
@@ -195,11 +199,15 @@ class PerformanceAnalystAgent:
         recommendations = []
         for creative_format, group_rows in groups.items():
             engagement_rate = _weighted_average(group_rows, "ctr", "impressions")
+            best_row = max(group_rows, key=lambda r: r.get("ctr") or 0.0)
+            asset_id = best_row.get("asset_id")
             recommendations.append(
                 (
                     engagement_rate if engagement_rate is not None else float("-inf"),
                     CreativeRecommendation(
-                        creative_format=creative_format, historical_engagement_rate=engagement_rate
+                        creative_format=creative_format,
+                        historical_engagement_rate=engagement_rate,
+                        asset_id=asset_id,
                     ),
                 )
             )
