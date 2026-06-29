@@ -111,8 +111,23 @@ def render_intake_form(base_url: str, workflow_id: str, missing_fields: list[str
         st.rerun()
 
 
+def render_creative_assets(assets: list[dict]) -> None:
+    """Render any image creative assets inline, by local file path/URL.
+
+    asset_url points at a local path while CreativeDirectorAgent is still
+    backed by produce_static_sample() (see agents/creative_director.py) -
+    st.image() accepts that directly as long as the UI runs on the same
+    machine as the API.
+    """
+    for asset in assets:
+        if asset.get("creative_format") == "image":
+            st.image(asset["asset_url"], caption=f"{asset.get('platform', '')} creative")
+
+
 def render_human_review(base_url: str, workflow_id: str, campaign_proposal: dict | None) -> None:
     st.subheader("Human review")
+    if campaign_proposal:
+        render_creative_assets(campaign_proposal.get("creative_assets", []))
     st.json(campaign_proposal)
     col1, col2 = st.columns(2)
     if col1.button("Approve"):
@@ -175,9 +190,11 @@ if workflow_id:
             st.json(status["performance_insights"])
         if status.get("creative_director_output"):
             st.write("Creative director output")
+            render_creative_assets(status["creative_director_output"].get("assets", []))
             st.json(status["creative_director_output"])
         if status.get("campaign_proposal"):
             st.write("Campaign proposal")
+            render_creative_assets(status["campaign_proposal"].get("creative_assets", []))
             st.json(status["campaign_proposal"])
         if st.session_state.get("approval_result", {}).get("persisted_campaign_id"):
             st.success(f"Persisted campaign ID: {st.session_state['approval_result']['persisted_campaign_id']}")

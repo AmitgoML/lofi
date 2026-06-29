@@ -13,6 +13,7 @@ alongside the state - the checkpointer (MemorySaver, see api/app.py) is the
 source of truth for what's paused and why, read here via graph.get_state().
 """
 
+import logging
 from uuid import uuid4
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
@@ -23,6 +24,8 @@ from lofi.api.dependencies import get_compiled_graph, get_workflow_errors
 from lofi.api.schemas import ApprovalResponse, CampaignStatusResponse, StartCampaignRequest, WorkflowResponse
 from lofi.schemas.intake import IntakeDraft, IntakeFormRequest
 from lofi.state.workflow_state import WorkflowState, WorkflowStatus
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -37,7 +40,11 @@ def _run_graph(
     try:
         graph.invoke(input_, config=_thread_config(workflow_id))
     except Exception as exc:  # noqa: BLE001 - any agent/LLM/Supabase failure should land here as a status, not crash the task
-        errors[workflow_id] = str(exc)
+        # str(exc) can be "" for bare `raise SomeError` with no message (e.g.
+        # the still-unimplemented agent stubs) - log the full traceback so
+        # the failure is visible somewhere even when the API response isn't.
+        logger.exception("Workflow %s failed", workflow_id)
+        errors[workflow_id] = str(exc) or repr(exc)
 
 
 def _pending_interrupt(snapshot: StateSnapshot) -> Interrupt | None:
