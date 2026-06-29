@@ -30,6 +30,10 @@ class WorkflowStatus(str, Enum):
     AWAITING_REVIEW = "awaiting_review"
     APPROVED = "approved"
     REJECTED = "rejected"
+    # performance_analysis/creative_asset intents (see Intent in
+    # schemas/intake.py) finish without ever going through human_review, so
+    # they never set "approved" - COMPLETED is their terminal status instead.
+    COMPLETED = "completed"
     FAILED = "failed"
 
 

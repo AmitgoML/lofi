@@ -23,7 +23,8 @@ from lofi.persistence.supabase_client import SupabaseClient
 from lofi.schemas.campaign_plan import CampaignPlan
 from lofi.schemas.common import AudienceSpec, BudgetSpec, CampaignGoal, CampaignTiming, Location, Platform, QAStatus
 from lofi.schemas.creative_director import CreativeBrief, CreativeDirectorOutput, TextAsset
-from lofi.schemas.intake import ExtractedIntakeFields
+from lofi.schemas.intake import ExtractedIntakeFields, Intent
+from lofi.schemas.performance_analyst import NarrativeSummary
 from lofi.schemas.qa_agent import QAAgentOutput
 from lofi.state.workflow_state import WorkflowStatus
 
@@ -106,7 +107,16 @@ def stub_agent_implementations(monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.fixture
 def extract_structured(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
-    mock = MagicMock(return_value=FULLY_SPECIFIED_FIELDS)
+    # Shared across two callers now: intake extraction (schema=ExtractedIntakeFields,
+    # default-mocked below to FULLY_SPECIFIED_FIELDS, overridden per-test) and the
+    # performance analyst's narrative summary (schema=NarrativeSummary). Branch on
+    # the schema arg so each gets a response of the right type.
+    def _respond(prompt: str, schema: type) -> object:
+        if schema is NarrativeSummary:
+            return NarrativeSummary(summary="Stub narrative summary.")
+        return mock.return_value
+
+    mock = MagicMock(return_value=FULLY_SPECIFIED_FIELDS, side_effect=_respond)
     monkeypatch.setattr(BedrockClient, "extract_structured", mock)
     return mock
 
@@ -134,6 +144,7 @@ class TestStartCampaign:
 
         assert status_response.json()["status"] == WorkflowStatus.AWAITING_REVIEW.value
         assert status_response.json()["campaign_proposal"]["brand"] == "Acme Coffee"
+        assert status_response.json()["performance_insights"]["narrative_summary"] == "Stub narrative summary."
 
     def test_partial_request_pauses_for_intake_form(self, client: TestClient, extract_structured: MagicMock) -> None:
         extract_structured.return_value = ExtractedIntakeFields(brand="Acme Coffee")
@@ -169,7 +180,8 @@ class TestStartCampaign:
             },
         )
 
-        assert extract_structured.call_count == 1
+        extraction_calls = [call for call in extract_structured.call_args_list if call.args[1] is ExtractedIntakeFields]
+        assert len(extraction_calls) == 1
 
 
 class TestIntakeForm:
@@ -222,6 +234,66 @@ class TestGetCampaignStatus:
         response = client.get("/campaigns/does-not-exist")
 
         assert response.status_code == 404
+
+    def test_returns_classified_intent_once_intake_has_run(self, client: TestClient) -> None:
+        workflow_id = _start_campaign(client)
+
+        status_response = client.get(f"/campaigns/{workflow_id}")
+
+        assert status_response.json()["intent"] == Intent.CAMPAIGN_PLANNING.value
+
+
+class TestPerformanceAnalysisIntent:
+    def test_runs_performance_analyst_only_and_completes(
+        self, client: TestClient, extract_structured: MagicMock
+    ) -> None:
+        extract_structured.return_value = ExtractedIntakeFields(intent=Intent.PERFORMANCE_ANALYSIS, brand="Acme Coffee")
+
+        workflow_id = _start_campaign(client)
+        status_response = client.get(f"/campaigns/{workflow_id}").json()
+
+        assert status_response["intent"] == Intent.PERFORMANCE_ANALYSIS.value
+        assert status_response["status"] == WorkflowStatus.COMPLETED.value
+        assert status_response["performance_insights"] is not None
+        assert status_response["campaign_proposal"] is None
+
+    def test_pauses_for_brand_only_when_missing(self, client: TestClient, extract_structured: MagicMock) -> None:
+        extract_structured.return_value = ExtractedIntakeFields(intent=Intent.PERFORMANCE_ANALYSIS)
+
+        workflow_id = _start_campaign(client)
+        status_response = client.get(f"/campaigns/{workflow_id}").json()
+
+        assert status_response["status"] == WorkflowStatus.AWAITING_INTAKE_FORM.value
+        assert status_response["intake_form_request"]["missing_fields"] == ["brand"]
+
+        client.post(f"/campaigns/{workflow_id}/intake-form", json={"user_request": "ignored", "brand": "Acme Coffee"})
+
+        final_status = client.get(f"/campaigns/{workflow_id}").json()
+        assert final_status["status"] == WorkflowStatus.COMPLETED.value
+
+
+class TestCreativeAssetIntent:
+    def test_surfaces_not_implemented_stub_as_failed(
+        self, extract_structured: MagicMock, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # stub_agent_implementations (autouse) patches CreativeDirectorAgent.run
+        # to a canned success for the campaign_planning chain's tests, before
+        # the graph is even built. Undo that here, *before* building our own
+        # app/TestClient below, so the graph node captures the agent's real
+        # run() - which still just raises NotImplementedError (see
+        # agents/creative_director.py) - rather than the already-bound stub.
+        def _unimplemented_run(self: CreativeDirectorAgent, state: dict) -> dict:
+            raise NotImplementedError
+
+        monkeypatch.setattr(CreativeDirectorAgent, "run", _unimplemented_run)
+        extract_structured.return_value = ExtractedIntakeFields(intent=Intent.CREATIVE_ASSET, brand="Acme Coffee")
+
+        with TestClient(create_app()) as client:
+            workflow_id = _start_campaign(client)
+            status_response = client.get(f"/campaigns/{workflow_id}").json()
+
+        assert status_response["status"] == WorkflowStatus.FAILED.value
+        assert status_response["intent"] == Intent.CREATIVE_ASSET.value
 
 
 class TestApproveCampaign:

@@ -77,10 +77,15 @@ def get_campaign_status(
     graph: CompiledStateGraph = Depends(get_compiled_graph),
     errors: dict[str, str] = Depends(get_workflow_errors),
 ) -> CampaignStatusResponse:
-    if workflow_id in errors:
-        return CampaignStatusResponse(workflow_id=workflow_id, status=WorkflowStatus.FAILED, error=errors[workflow_id])
-
     snapshot = _get_snapshot_or_404(workflow_id, graph)
+    intake_draft = snapshot.values.get("intake_draft")
+    intent = intake_draft.intent if intake_draft is not None else None
+
+    if workflow_id in errors:
+        return CampaignStatusResponse(
+            workflow_id=workflow_id, status=WorkflowStatus.FAILED, intent=intent, error=errors[workflow_id]
+        )
+
     pending = _pending_interrupt(snapshot)
 
     intake_form_request = None
@@ -93,13 +98,24 @@ def get_campaign_status(
         status = WorkflowStatus.APPROVED
     elif snapshot.values.get("approved") is False:
         status = WorkflowStatus.REJECTED
+    elif not snapshot.next and (
+        "performance_insights" in snapshot.values or "creative_director_output" in snapshot.values
+    ):
+        # performance_analysis/creative_asset intents finish here directly -
+        # they never go through human_review, so "approved" is never set for
+        # them. `not snapshot.next` confirms the graph actually reached END
+        # rather than just being mid-way through the campaign_planning chain.
+        status = WorkflowStatus.COMPLETED
     else:
         status = WorkflowStatus.PROCESSING
 
     return CampaignStatusResponse(
         workflow_id=workflow_id,
         status=status,
+        intent=intent,
         intake_form_request=intake_form_request,
+        performance_insights=snapshot.values.get("performance_insights"),
+        creative_director_output=snapshot.values.get("creative_director_output"),
         campaign_proposal=snapshot.values.get("campaign_proposal"),
     )
 

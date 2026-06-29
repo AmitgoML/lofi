@@ -17,6 +17,19 @@ from pydantic import BaseModel, Field
 from lofi.schemas.common import AudienceSpec, BudgetSpec, CampaignGoal, CampaignTiming, Location, Platform
 
 
+class Intent(str, Enum):
+    """What the user's request is actually asking Lucy to do.
+
+    Drives which agents the router sends the workflow through (see
+    route_from_campaign_planner in graph/workflow_graph.py) - only
+    CAMPAIGN_PLANNING runs the full chain; the other two run a single agent.
+    """
+
+    CAMPAIGN_PLANNING = "campaign_planning"
+    PERFORMANCE_ANALYSIS = "performance_analysis"
+    CREATIVE_ASSET = "creative_asset"
+
+
 class IntakeField(str, Enum):
     """Fields a user can fill in via free text or the intake form.
 
@@ -37,6 +50,9 @@ class IntakeField(str, Enum):
 class IntakeDraft(BaseModel):
     """Partial CampaignPlannerInput: every field but user_request may still be unset."""
     user_request: str = Field(description="Raw natural-language campaign request from the user")
+    intent: Intent = Field(
+        default=Intent.CAMPAIGN_PLANNING, description="What the user's request is asking Lucy to do"
+    )
     brand: Optional[str] = Field(default=None, description="Brand the campaign is being run for")
     organization_id: Optional[str] = Field(
         default=None, description="Organization ID the brand/campaign belongs to"
@@ -64,6 +80,9 @@ class ExtractedIntakeFields(BaseModel):
     the caller's auth/session context, never from the user's text).
     """
 
+    intent: Optional[Intent] = Field(
+        default=None, description="What the user's request is asking Lucy to do"
+    )
     brand: Optional[str] = Field(default=None, description="Brand the campaign is being run for")
     goal: Optional[CampaignGoal] = Field(default=None, description="Campaign goal as stated or inferred")
     budget: Optional[BudgetSpec] = Field(default=None, description="Budget as stated or inferred")

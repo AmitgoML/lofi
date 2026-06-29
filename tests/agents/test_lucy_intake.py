@@ -15,7 +15,7 @@ from langgraph.types import Command
 
 from lofi.agents.lucy_intake import EXTRACTION_PROMPT_TEMPLATE, LucyCampaignIntake
 from lofi.schemas.common import AudienceSpec, BudgetSpec, CampaignGoal, Location, Platform
-from lofi.schemas.intake import ExtractedIntakeFields, IntakeDraft, IntakeField
+from lofi.schemas.intake import ExtractedIntakeFields, Intent, IntakeDraft, IntakeField
 from lofi.state.workflow_state import WorkflowState
 
 
@@ -51,6 +51,22 @@ class TestExtractBrief:
         assert draft.platforms is None
         assert draft.campaign_timing is None
 
+    def test_unclassified_intent_falls_back_to_campaign_planning(
+        self, intake: LucyCampaignIntake, bedrock_client: MagicMock
+    ) -> None:
+        bedrock_client.extract_structured.return_value = ExtractedIntakeFields()
+
+        draft = intake.extract_brief("Promote my coffee shop")
+
+        assert draft.intent == Intent.CAMPAIGN_PLANNING
+
+    def test_classified_intent_is_kept(self, intake: LucyCampaignIntake, bedrock_client: MagicMock) -> None:
+        bedrock_client.extract_structured.return_value = ExtractedIntakeFields(intent=Intent.PERFORMANCE_ANALYSIS)
+
+        draft = intake.extract_brief("How did our Meta ads perform last month?")
+
+        assert draft.intent == Intent.PERFORMANCE_ANALYSIS
+
 
 class TestExtractNode:
     def test_extracts_and_injects_organization_id(self, intake: LucyCampaignIntake, bedrock_client: MagicMock) -> None:
@@ -76,13 +92,26 @@ class TestExtractNode:
 
 
 class TestFindMissingFields:
-    def test_lists_every_unset_field(self, intake: LucyCampaignIntake) -> None:
+    def test_lists_every_unset_field_for_campaign_planning(self, intake: LucyCampaignIntake) -> None:
         draft = IntakeDraft(user_request="x", organization_id="org-1", brand="Acme Coffee")
 
         missing = intake.find_missing_fields(draft)
 
         assert IntakeField.BRAND not in missing
         assert IntakeField.GOAL in missing
+
+    def test_performance_analysis_only_requires_brand(self, intake: LucyCampaignIntake) -> None:
+        draft = IntakeDraft(user_request="x", organization_id="org-1", intent=Intent.PERFORMANCE_ANALYSIS)
+
+        assert intake.find_missing_fields(draft) == [IntakeField.BRAND]
+
+        draft = draft.model_copy(update={"brand": "Acme Coffee"})
+        assert intake.find_missing_fields(draft) == []
+
+    def test_creative_asset_only_requires_brand(self, intake: LucyCampaignIntake) -> None:
+        draft = IntakeDraft(user_request="x", organization_id="org-1", intent=Intent.CREATIVE_ASSET)
+
+        assert intake.find_missing_fields(draft) == [IntakeField.BRAND]
 
 
 class TestApplyFormSubmission:
@@ -179,3 +208,20 @@ class TestCollectMissingFields:
         assert third["campaign_brief"].platforms == [Platform.META]
         assert third["campaign_brief"].target_audience == AudienceSpec(age_min=18, age_max=35)
         assert third["campaign_brief"].locations == [Location(country="USA")]
+
+    def test_performance_analysis_intent_skips_campaign_brief(self, intake: LucyCampaignIntake) -> None:
+        compiled = self._build_graph(intake)
+        config = {"configurable": {"thread_id": "t3"}}
+        draft = IntakeDraft(
+            user_request="How did our ads do?", organization_id="org-1", intent=Intent.PERFORMANCE_ANALYSIS
+        )
+
+        first = compiled.invoke({"intake_draft": draft}, config=config)
+        assert "__interrupt__" in first
+        assert first["__interrupt__"][0].value["missing_fields"] == ["brand"]
+
+        second = compiled.invoke(Command(resume={"user_request": "ignored", "brand": "Acme Coffee"}), config=config)
+
+        assert "__interrupt__" not in second
+        assert second["intake_draft"].brand == "Acme Coffee"
+        assert "campaign_brief" not in second

@@ -5,9 +5,8 @@ from unittest.mock import MagicMock
 import pytest
 
 from lofi.agents.performance_analyst import PerformanceAnalystAgent
-from lofi.schemas.common import BudgetSpec, CampaignGoal, CampaignTiming
-from lofi.schemas.campaign_planner import CampaignPlannerInput
-from lofi.schemas.performance_analyst import PerformanceAnalystInput
+from lofi.schemas.intake import IntakeDraft
+from lofi.schemas.performance_analyst import ConfidenceLevel, NarrativeSummary, PerformanceAnalystInput
 
 
 @pytest.fixture
@@ -55,12 +54,62 @@ class TestRankPlatforms:
 
         assert recommendations == []
 
+    def test_facebook_raw_value_maps_to_meta(self, agent: PerformanceAnalystAgent) -> None:
+        rows = [{"platform": "facebook", "roas": 3.0, "cost": 100, "ctr": 0.02, "impressions": 1000}]
+
+        recommendations = agent._rank_platforms(rows)
+
+        assert recommendations[0].platform.value == "meta"
+
     def test_empty_rows_returns_empty_list(self, agent: PerformanceAnalystAgent) -> None:
         assert agent._rank_platforms([]) == []
 
+    def test_low_sample_size_and_spend_is_directional_confidence(self, agent: PerformanceAnalystAgent) -> None:
+        rows = [{"platform": "meta", "roas": 4.0, "cost": 10, "ctr": 0.02, "impressions": 1000}]
+
+        recommendations = agent._rank_platforms(rows)
+
+        assert recommendations[0].confidence == ConfidenceLevel.DIRECTIONAL
+        assert recommendations[0].anomalies == []
+        assert recommendations[0].trend == []
+
+    def test_high_confidence_with_enough_days_and_spend(self, agent: PerformanceAnalystAgent) -> None:
+        from datetime import date, timedelta
+
+        base = date(2026, 1, 1)
+        rows = [
+            {
+                "platform": "meta",
+                "date": (base + timedelta(days=i)).isoformat(),
+                "roas": 4.0,
+                "cost": 20.0,
+                "ctr": 0.02,
+                "impressions": 1000,
+            }
+            for i in range(30)
+        ]
+
+        recommendations = agent._rank_platforms(rows)
+
+        assert recommendations[0].confidence == ConfidenceLevel.HIGH
+
+    def test_spike_in_dated_rows_surfaces_as_anomaly(self, agent: PerformanceAnalystAgent) -> None:
+        from datetime import date, timedelta
+
+        base = date(2026, 1, 1)
+        costs = [95.0, 105.0, 98.0, 102.0, 97.0, 103.0, 100.0, 5000.0]
+        rows = [
+            {"platform": "meta", "date": (base + timedelta(days=i)).isoformat(), "roas": 4.0, "cost": cost}
+            for i, cost in enumerate(costs)
+        ]
+
+        recommendations = agent._rank_platforms(rows)
+
+        assert any(a.metric == "cost" and a.direction == "spike" for a in recommendations[0].anomalies)
+
 
 class TestRankLocations:
-    def test_builds_location_from_joined_brand_location(self, agent: PerformanceAnalystAgent) -> None:
+    def test_builds_location_from_place_id(self, agent: PerformanceAnalystAgent) -> None:
         rows = [
             {
                 "place_id": "place-1",
@@ -68,22 +117,14 @@ class TestRankLocations:
                 "cost": 100,
                 "ctr": 0.02,
                 "impressions": 1000,
-                "brand_locations": {"name": "Downtown Store", "address": "123 Main St, Springfield, USA"},
             }
         ]
 
         recommendations = agent._rank_locations(rows)
 
-        assert recommendations[0].location.city == "Downtown Store"
-        assert recommendations[0].location.country == "USA"
-        assert recommendations[0].historical_performance_score == 3.0
-
-    def test_missing_address_falls_back_to_unknown_country(self, agent: PerformanceAnalystAgent) -> None:
-        rows = [{"place_id": "place-1", "roas": 1.0, "cost": 100, "brand_locations": {}}]
-
-        recommendations = agent._rank_locations(rows)
-
+        assert recommendations[0].location.city == "place-1"
         assert recommendations[0].location.country == "unknown"
+        assert recommendations[0].historical_performance_score == 3.0
 
 
 class TestRankAudiences:
@@ -107,10 +148,10 @@ class TestRankAudiences:
 
 
 class TestRankCreatives:
-    def test_groups_by_asset_type_via_join(self, agent: PerformanceAnalystAgent) -> None:
+    def test_groups_by_asset_type(self, agent: PerformanceAnalystAgent) -> None:
         rows = [
-            {"creative_id": "c1", "ctr": 0.04, "impressions": 1000, "creative_assets": {"asset_type": "video"}},
-            {"creative_id": "c2", "ctr": 0.01, "impressions": 1000, "creative_assets": {"asset_type": "image"}},
+            {"creative_id": "c1", "ctr": 0.04, "impressions": 1000, "asset_type": "video"},
+            {"creative_id": "c2", "ctr": 0.01, "impressions": 1000, "asset_type": "image"},
         ]
 
         recommendations = agent._rank_creatives(rows)
@@ -119,7 +160,7 @@ class TestRankCreatives:
         assert recommendations[0].historical_engagement_rate == 0.04
 
     def test_unrecognized_asset_type_is_skipped(self, agent: PerformanceAnalystAgent) -> None:
-        rows = [{"creative_id": "c1", "ctr": 0.04, "impressions": 1000, "creative_assets": {"asset_type": "carousel"}}]
+        rows = [{"creative_id": "c1", "ctr": 0.04, "impressions": 1000, "asset_type": "carousel"}]
 
         assert agent._rank_creatives(rows) == []
 
@@ -143,6 +184,51 @@ class TestAnalyze:
         assert output.location_recommendations == []
 
 
+class TestNarrativeSummary:
+    def test_no_bedrock_client_returns_none(
+        self, agent: PerformanceAnalystAgent, supabase_client: MagicMock, analyst_input: PerformanceAnalystInput
+    ) -> None:
+        supabase_client.get_platform_metrics.return_value = []
+        supabase_client.get_location_metrics.return_value = []
+        supabase_client.get_audience_metrics.return_value = []
+        supabase_client.get_creative_metrics.return_value = []
+
+        output = agent.analyze(analyst_input)
+
+        assert output.narrative_summary is None
+
+    def test_bedrock_client_populates_narrative(
+        self, supabase_client: MagicMock, analyst_input: PerformanceAnalystInput
+    ) -> None:
+        bedrock_client = MagicMock()
+        bedrock_client.extract_structured.return_value = NarrativeSummary(summary="Meta is the strongest platform.")
+        agent = PerformanceAnalystAgent(supabase_client, bedrock_client)
+        supabase_client.get_platform_metrics.return_value = []
+        supabase_client.get_location_metrics.return_value = []
+        supabase_client.get_audience_metrics.return_value = []
+        supabase_client.get_creative_metrics.return_value = []
+
+        output = agent.analyze(analyst_input)
+
+        assert output.narrative_summary == "Meta is the strongest platform."
+        bedrock_client.extract_structured.assert_called_once()
+
+    def test_bedrock_failure_is_non_fatal(
+        self, supabase_client: MagicMock, analyst_input: PerformanceAnalystInput
+    ) -> None:
+        bedrock_client = MagicMock()
+        bedrock_client.extract_structured.side_effect = RuntimeError("boom")
+        agent = PerformanceAnalystAgent(supabase_client, bedrock_client)
+        supabase_client.get_platform_metrics.return_value = []
+        supabase_client.get_location_metrics.return_value = []
+        supabase_client.get_audience_metrics.return_value = []
+        supabase_client.get_creative_metrics.return_value = []
+
+        output = agent.analyze(analyst_input)
+
+        assert output.narrative_summary is None
+
+
 class TestRun:
     def test_writes_performance_insights_into_state(
         self, agent: PerformanceAnalystAgent, supabase_client: MagicMock
@@ -152,15 +238,8 @@ class TestRun:
         supabase_client.get_audience_metrics.return_value = []
         supabase_client.get_creative_metrics.return_value = []
 
-        brief = CampaignPlannerInput(
-            user_request="Run a campaign",
-            brand="Acme",
-            organization_id="org-1",
-            goal=CampaignGoal.AWARENESS,
-            budget=BudgetSpec(total_budget=1000.0),
-            campaign_timing=CampaignTiming(start_date="2026-07-01"),
-        )
-        state = {"user_request": "Run a campaign", "campaign_brief": brief}
+        draft = IntakeDraft(user_request="Run a campaign", organization_id="org-1", brand="Acme")
+        state = {"user_request": "Run a campaign", "organization_id": "org-1", "intake_draft": draft}
 
         result_state = agent.run(state)
 

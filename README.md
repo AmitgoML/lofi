@@ -25,6 +25,8 @@ Run `uv run python scripts/visualize_graph.py` to regenerate an up-to-date diagr
 
 Extraction (the one Bedrock call in intake) lives in its own node, `intake_extract`, separate from `intake_form` (the node that actually pauses): LangGraph replays a node's whole function body on every resume, so anything with a side effect before an `interrupt()` *in the same node* would re-run on every resume too.
 
+The same extraction call also classifies the request's *intent* (`campaign_planning` / `performance_analysis` / `creative_asset`, see `IntakeDraft.intent` in `src/lofi/schemas/intake.py`). `route_from_campaign_planner` branches on it: `campaign_planning` runs the full chain above; `performance_analysis` and `creative_asset` each run a single agent standalone (just enough intake to get a `brand`) and finish - no new nodes/edges, since those agents already hand control back to `campaign_planner` like everything else.
+
 ## Project layout
 
 | Path | Purpose |
@@ -57,8 +59,10 @@ Required environment variables (see `src/lofi/config/settings.py`):
 ## Running the API
 
 ```bash
-uv run uvicorn lofi.main:app --reload
+uv run uvicorn lofi.main:app --reload --app-dir src
 ```
+
+`--app-dir src` is needed because this project isn't installed as a package (`[tool.uv] package = false`) - it puts `src/` on `sys.path` so `lofi` is importable. pytest gets the same effect via `pythonpath = ["src"]` in `pyproject.toml`.
 
 | Endpoint | Description |
 |---|---|
@@ -81,3 +85,19 @@ uv run pytest
 Implemented: Performance Analyst (metrics aggregation/ranking), Lucy Campaign Intake (Bedrock-based extraction + interrupt-based form collection), Human Review (interrupt-based approve/reject + persistence), the FastAPI layer, and Supabase persistence for metrics/campaigns/brand guidelines/creative assets.
 
 Still stubbed (raise `NotImplementedError`): `CampaignPlannerAgent.plan()`, `CreativeDirectorAgent.produce_assets()` and its sub-agents, `QAAgent.validate()`, and S3 creative storage. A full end-to-end `POST /campaigns` run will currently land on `status=failed` once it reaches the Campaign Planner (the exception is caught by the background task and surfaced via `GET /campaigns/{workflow_id}`, not raised to the server).
+
+### Performance Analyst signals
+
+Beyond the original ROAS/CTR/CPA ranking, `PerformanceAnalystAgent` (`src/lofi/agents/performance_analyst.py`) now computes, per recommendation:
+
+- **`confidence`** (`high`/`medium`/`directional`) - how much historical evidence backs the number, based on sample size and (where a `cost` column is confirmed) total spend.
+- **`anomalies`** - single days where a metric deviated more than 2 rolling standard deviations from its trailing 7-day mean.
+- **`trend`** - week-over-week average change per metric.
+
+All of the above is plain, deterministic Python (`confidence_label`/`compute_anomalies`/`compute_trend` near the top of the file) - no LLM involved, and fully unit-tested in `tests/agents/test_performance_signals.py`. Anomalies/trend only run for platforms and locations, because `campaign_platform_metrics`/`campaign_location_metrics` are the only tables with a confirmed `date` column (proven by the existing `.gte("date", ...)` filters in `SupabaseClient`); audience/creative get confidence only, since their date and `cost` columns aren't confirmed.
+
+`PerformanceAnalystOutput.narrative_summary` is one optional LLM call (`BedrockClient.extract_structured`, same structured-extraction pattern used by Lucy Campaign Intake) that narrates the already-computed output in prose. It's intentionally the *only* place an LLM touches this agent, runs last, is constrained to the data already produced, and fails closed (`None`) on any error without affecting the rest of the output.
+
+**Not yet wired into the production graph**: `build_campaign_workflow_graph` (`src/lofi/graph/workflow_graph.py`) still constructs `PerformanceAnalystAgent` without a `bedrock_client`, so `narrative_summary` is always `None` end-to-end today. Passing one in makes `extract_structured` get called on every workflow run, which conflicts with an existing invariant the intake pause/resume logic depends on (`test_routes.py::test_extraction_is_called_exactly_once_across_a_pause` asserts exactly one Bedrock call per workflow). Wire it up once that invariant is revisited.
+
+Schema still considered too ambiguous to build on without confirming columns first: `campaign_id` and `budget_type` on the metrics/campaigns tables, and `campaign_status` - needed for per-campaign budget-reallocation signals (waste/saturation/headroom) and per-creative fatigue trend, neither of which exist yet.

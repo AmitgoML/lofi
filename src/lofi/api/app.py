@@ -3,6 +3,7 @@ once at startup (lifespan) rather than per-request."""
 
 from contextlib import asynccontextmanager
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -12,10 +13,16 @@ from lofi.graph.workflow_graph import build_campaign_workflow_graph
 from lofi.llm.bedrock_client import BedrockClient
 from lofi.persistence.supabase_client import SupabaseClient
 
+# Settings() reads .env itself, but boto3 (BedrockClient) reads
+# AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY straight from the process
+# environment - load_dotenv() exports the whole file there too so both pick
+# it up without needing the shell session to export them first.
+load_dotenv()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    settings = Settings.from_env()
+    settings = Settings()
     supabase_client = SupabaseClient(settings)
     bedrock_client = BedrockClient(settings)
 
