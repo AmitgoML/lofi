@@ -29,6 +29,7 @@ from lofi.agents.lucy_intake import LucyCampaignIntake
 from lofi.agents.performance_analyst import PerformanceAnalystAgent
 from lofi.agents.qa_agent import QAAgent
 from lofi.llm.bedrock_client import BedrockClient
+from lofi.persistence.s3_storage import S3CreativeStorage
 from lofi.persistence.supabase_client import SupabaseClient
 from lofi.proposal.assembly import CampaignProposalAssembler
 from lofi.schemas.intake import Intent
@@ -75,6 +76,7 @@ def _route_campaign_planning(state: WorkflowState) -> str:
     return END
 
 
+
 def _route_performance_analysis(state: WorkflowState) -> str:
     if not state["intake_draft"].brand:
         return "intake_form"
@@ -91,11 +93,15 @@ def _route_creative_asset(state: WorkflowState) -> str:
     return END
 
 
-def build_campaign_workflow_graph(supabase_client: SupabaseClient, bedrock_client: BedrockClient) -> StateGraph:
+def build_campaign_workflow_graph(supabase_client: SupabaseClient, bedrock_client: BedrockClient, s3_storage: S3CreativeStorage) -> StateGraph:
     intake = LucyCampaignIntake(bedrock_client)
     performance_analyst = PerformanceAnalystAgent(supabase_client, bedrock_client)
     campaign_planner = CampaignPlannerAgent()
-    creative_director = CreativeDirectorAgent()
+    creative_director = CreativeDirectorAgent(
+        bedrock_client=bedrock_client,
+        supabase_client=supabase_client,
+        s3_storage=s3_storage,
+    )
     qa_agent = QAAgent()
     proposal_assembler = CampaignProposalAssembler()
     human_review = HumanReviewAgent(supabase_client)

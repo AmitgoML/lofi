@@ -24,7 +24,14 @@ class BedrockClient:
 
     def __init__(self, settings: Settings, client=None) -> None:
         self._model_id = settings.bedrock_model_id
-        self._client = client or boto3.client("bedrock-runtime", region_name=settings.aws_region)
+        if client is not None:
+            self._client = client
+        else:
+            session = boto3.Session(
+                profile_name=settings.aws_profile,
+                region_name=settings.aws_region,
+            )
+            self._client = session.client("bedrock-runtime")
 
     def extract_structured(self, prompt: str, schema: Type[ModelT]) -> ModelT:
         tool_name = schema.__name__
@@ -46,3 +53,13 @@ class BedrockClient:
         payload = json.loads(response["body"].read())
         tool_use = next(block for block in payload["content"] if block["type"] == "tool_use")
         return schema.model_validate(tool_use["input"])
+
+    def invoke_model(self, model_id: str, body: str) -> dict:
+        """Raw invoke_model passthrough for non-Claude models (e.g. Nova Canvas)."""
+        response = self._client.invoke_model(
+            modelId=model_id,
+            body=body,
+            contentType="application/json",
+            accept="application/json",
+        )
+        return json.loads(response["body"].read())

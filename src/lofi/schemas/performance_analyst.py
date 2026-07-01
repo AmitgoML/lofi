@@ -98,6 +98,9 @@ class CreativeRecommendation(BaseModel):
     historical_engagement_rate: Optional[float] = Field(
         default=None, description="Historical engagement rate observed for this creative format"
     )
+    asset_id: Optional[str] = Field(
+        default=None, description="ID of the best-performing creative asset for this format"
+    )
     confidence: ConfidenceLevel = Field(
         default=ConfidenceLevel.DIRECTIONAL, description="How much historical evidence backs this recommendation"
     )
@@ -115,6 +118,9 @@ class PerformanceAnalystOutput(BaseModel):
     )
     creative_recommendations: List[CreativeRecommendation] = Field(
         description="Ranked list of recommended creative formats"
+    )
+    brand_id: Optional[str] = Field(
+        default=None, description="Brand UUID resolved from the brands table for this analysis"
     )
     narrative_summary: Optional[str] = Field(
         default=None,
@@ -134,3 +140,4 @@ class NarrativeSummary(BaseModel):
             "Must reference only numbers and findings already present in that data."
         )
     )
+    
