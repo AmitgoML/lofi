@@ -1,11 +1,11 @@
-"""Application configuration loaded from environment variables."""
+"""Application configuration loaded from environment variables (and .env)."""
 
-import os
-from dataclasses import dataclass
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-@dataclass(frozen=True)
-class Settings:
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
     aws_region: str
     aws_profile: str | None
     bedrock_model_id: str

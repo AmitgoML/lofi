@@ -13,6 +13,7 @@ alongside the state - the checkpointer (MemorySaver, see api/app.py) is the
 source of truth for what's paused and why, read here via graph.get_state().
 """
 
+import logging
 from uuid import uuid4
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
@@ -23,6 +24,8 @@ from lofi.api.dependencies import get_compiled_graph, get_workflow_errors
 from lofi.api.schemas import ApprovalResponse, CampaignStatusResponse, StartCampaignRequest, WorkflowResponse
 from lofi.schemas.intake import IntakeDraft, IntakeFormRequest
 from lofi.state.workflow_state import WorkflowState, WorkflowStatus
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -37,7 +40,11 @@ def _run_graph(
     try:
         graph.invoke(input_, config=_thread_config(workflow_id))
     except Exception as exc:  # noqa: BLE001 - any agent/LLM/Supabase failure should land here as a status, not crash the task
-        errors[workflow_id] = str(exc)
+        # str(exc) can be "" for bare `raise SomeError` with no message (e.g.
+        # the still-unimplemented agent stubs) - log the full traceback so
+        # the failure is visible somewhere even when the API response isn't.
+        logger.exception("Workflow %s failed", workflow_id)
+        errors[workflow_id] = str(exc) or repr(exc)
 
 
 def _pending_interrupt(snapshot: StateSnapshot) -> Interrupt | None:
@@ -77,10 +84,15 @@ def get_campaign_status(
     graph: CompiledStateGraph = Depends(get_compiled_graph),
     errors: dict[str, str] = Depends(get_workflow_errors),
 ) -> CampaignStatusResponse:
-    if workflow_id in errors:
-        return CampaignStatusResponse(workflow_id=workflow_id, status=WorkflowStatus.FAILED, error=errors[workflow_id])
-
     snapshot = _get_snapshot_or_404(workflow_id, graph)
+    intake_draft = snapshot.values.get("intake_draft")
+    intent = intake_draft.intent if intake_draft is not None else None
+
+    if workflow_id in errors:
+        return CampaignStatusResponse(
+            workflow_id=workflow_id, status=WorkflowStatus.FAILED, intent=intent, error=errors[workflow_id]
+        )
+
     pending = _pending_interrupt(snapshot)
 
     intake_form_request = None
@@ -93,13 +105,24 @@ def get_campaign_status(
         status = WorkflowStatus.APPROVED
     elif snapshot.values.get("approved") is False:
         status = WorkflowStatus.REJECTED
+    elif not snapshot.next and (
+        "performance_insights" in snapshot.values or "creative_director_output" in snapshot.values
+    ):
+        # performance_analysis/creative_asset intents finish here directly -
+        # they never go through human_review, so "approved" is never set for
+        # them. `not snapshot.next` confirms the graph actually reached END
+        # rather than just being mid-way through the campaign_planning chain.
+        status = WorkflowStatus.COMPLETED
     else:
         status = WorkflowStatus.PROCESSING
 
     return CampaignStatusResponse(
         workflow_id=workflow_id,
         status=status,
+        intent=intent,
         intake_form_request=intake_form_request,
+        performance_insights=snapshot.values.get("performance_insights"),
+        creative_director_output=snapshot.values.get("creative_director_output"),
         campaign_proposal=snapshot.values.get("campaign_proposal"),
     )
 

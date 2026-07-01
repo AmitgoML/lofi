@@ -1,5 +1,7 @@
 """Creative Director Agent: owns creative strategy and coordinates sub-agents."""
 
+from pathlib import Path
+
 from lofi.agents.sub_agents.copywriter import CopywriterAgent
 from lofi.agents.sub_agents.image_generator import ImageGeneratorAgent
 from lofi.agents.sub_agents.video_generator import VideoGeneratorAgent
@@ -18,6 +20,12 @@ from lofi.schemas.creative_director import (
     TextAsset,
 )
 from lofi.state.workflow_state import WorkflowState
+
+# Folder of placeholder creative assets used by produce_static_sample() while
+# the real generation sub-agents (CopywriterAgent, ImageGeneratorAgent,
+# VideoGeneratorAgent) are still unimplemented stubs.
+STATIC_CREATIVES_DIR = Path(__file__).parent / "static_creatives"
+VALVOLINE_SAMPLE_IMAGE = STATIC_CREATIVES_DIR / "valvoline_sample.jpg"
 
 
 class CreativeDirectorAgent:

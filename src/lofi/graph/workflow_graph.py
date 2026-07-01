@@ -6,6 +6,13 @@ decides what runs next purely from what's present in WorkflowState, so the
 campaign_planner node itself only has to do the actual planning (and replan
 on a QA FAIL) - it doesn't need to know about routing.
 
+Lucy Intake also classifies the request's intent (see schemas/intake.py).
+route_from_campaign_planner branches on it: campaign_planning runs the full
+chain below, while performance_analysis/creative_asset each run a single
+agent standalone and finish. This needed no new nodes/edges - it's purely
+a router change, since performance_analyst/creative_director already hand
+control back to campaign_planner like everything else.
+
 Two steps pause the workflow via LangGraph's interrupt()/Command(resume=...)
 rather than by the router returning early: intake_form (missing intake
 fields - see agents/lucy_intake.py) and human_review (final approve/reject -
@@ -25,6 +32,7 @@ from lofi.llm.bedrock_client import BedrockClient
 from lofi.persistence.s3_storage import S3CreativeStorage
 from lofi.persistence.supabase_client import SupabaseClient
 from lofi.proposal.assembly import CampaignProposalAssembler
+from lofi.schemas.intake import Intent
 from lofi.state.workflow_state import WorkflowState
 
 
@@ -34,9 +42,25 @@ def route_from_campaign_planner(state: WorkflowState) -> str:
     needed here: intake_form/human_review pause *inside* their own node via
     interrupt(), so the router only ever sees state from a node that has
     actually completed and returned.
+
+    Branches on the intent Lucy Intake classified the request as
+    (state["intake_draft"].intent): campaign_planning runs the full chain
+    below; performance_analysis and creative_asset each run a single agent
+    and finish. No graph topology changes for this - every node these two
+    intents need already hands control back to campaign_planner.
     """
     if "intake_draft" not in state:
         return "intake_extract"
+
+    intent = state["intake_draft"].intent
+    if intent == Intent.PERFORMANCE_ANALYSIS:
+        return _route_performance_analysis(state)
+    if intent == Intent.CREATIVE_ASSET:
+        return _route_creative_asset(state)
+    return _route_campaign_planning(state)
+
+
+def _route_campaign_planning(state: WorkflowState) -> str:
     if "campaign_brief" not in state:
         return "intake_form"
     if "performance_insights" not in state:
@@ -52,13 +76,26 @@ def route_from_campaign_planner(state: WorkflowState) -> str:
     return END
 
 
-def build_campaign_workflow_graph(
-    supabase_client: SupabaseClient,
-    bedrock_client: BedrockClient,
-    s3_storage: S3CreativeStorage,
-) -> StateGraph:
+
+def _route_performance_analysis(state: WorkflowState) -> str:
+    if not state["intake_draft"].brand:
+        return "intake_form"
+    if "performance_insights" not in state:
+        return "performance_analyst"
+    return END
+
+
+def _route_creative_asset(state: WorkflowState) -> str:
+    if not state["intake_draft"].brand:
+        return "intake_form"
+    if "creative_director_output" not in state:
+        return "creative_director"
+    return END
+
+
+def build_campaign_workflow_graph(supabase_client: SupabaseClient, bedrock_client: BedrockClient, s3_storage: S3CreativeStorage) -> StateGraph:
     intake = LucyCampaignIntake(bedrock_client)
-    performance_analyst = PerformanceAnalystAgent(supabase_client)
+    performance_analyst = PerformanceAnalystAgent(supabase_client, bedrock_client)
     campaign_planner = CampaignPlannerAgent()
     creative_director = CreativeDirectorAgent(
         bedrock_client=bedrock_client,

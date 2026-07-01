@@ -10,7 +10,9 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from lofi.schemas.campaign_planner import FinalCampaignProposal
-from lofi.schemas.intake import IntakeFormRequest
+from lofi.schemas.creative_director import CreativeDirectorOutput
+from lofi.schemas.intake import Intent, IntakeFormRequest
+from lofi.schemas.performance_analyst import PerformanceAnalystOutput
 from lofi.state.workflow_state import WorkflowStatus
 
 
@@ -26,8 +28,17 @@ class WorkflowResponse(BaseModel):
 
 
 class CampaignStatusResponse(WorkflowResponse):
+    intent: Optional[Intent] = Field(
+        default=None, description="What Lucy Intake classified the request as, once intake has run"
+    )
     intake_form_request: Optional[IntakeFormRequest] = Field(
         default=None, description="Set when status is awaiting_intake_form"
+    )
+    performance_insights: Optional[PerformanceAnalystOutput] = Field(
+        default=None, description="Set once the Performance Analyst has run (campaign_planning and performance_analysis intents)"
+    )
+    creative_director_output: Optional[CreativeDirectorOutput] = Field(
+        default=None, description="Set once the Creative Director has run (campaign_planning and creative_asset intents)"
     )
     campaign_proposal: Optional[FinalCampaignProposal] = Field(
         default=None, description="Set once the workflow reaches awaiting_review or later"

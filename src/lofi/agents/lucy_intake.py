@@ -13,7 +13,7 @@ from langgraph.types import interrupt
 
 from lofi.llm.bedrock_client import BedrockClient
 from lofi.schemas.campaign_planner import CampaignPlannerInput
-from lofi.schemas.intake import ExtractedIntakeFields, IntakeDraft, IntakeField
+from lofi.schemas.intake import ExtractedIntakeFields, Intent, IntakeDraft, IntakeField
 from lofi.state.workflow_state import WorkflowState
 
 EXTRACTION_PROMPT_TEMPLATE = """\
@@ -22,7 +22,23 @@ Extract the campaign fields mentioned in the user's request below.
 Leave a field unset if the user did not mention it - do not guess or infer
 values the user did not state.
 
+Also classify the user's intent as one of:
+- campaign_planning: the user wants a new campaign planned end-to-end
+- performance_analysis: the user wants insights/recommendations from past
+  campaign performance, not a new campaign plan
+- creative_asset: the user wants creative assets (copy, image, video)
+  produced, not a new campaign plan
+
 User request: {user_request}"""
+
+# Fields the user must supply before the corresponding intent's flow can
+# proceed. campaign_planning needs the full brief; the other two only need
+# enough to identify which brand's data/assets to work with.
+REQUIRED_FIELDS_BY_INTENT: dict[Intent, list[IntakeField]] = {
+    Intent.CAMPAIGN_PLANNING: list(IntakeField),
+    Intent.PERFORMANCE_ANALYSIS: [IntakeField.BRAND],
+    Intent.CREATIVE_ASSET: [IntakeField.BRAND],
+}
 
 
 class LucyCampaignIntake:
@@ -52,22 +68,28 @@ class LucyCampaignIntake:
             missing = self.find_missing_fields(draft)
 
         state["intake_draft"] = draft
-        state["campaign_brief"] = self.finalize_brief(draft)
+        # Only campaign_planning runs the full chain that needs a complete
+        # CampaignPlannerInput; the other intents only need intake_draft
+        # itself (see route_from_campaign_planner).
+        if draft.intent == Intent.CAMPAIGN_PLANNING:
+            state["campaign_brief"] = self.finalize_brief(draft)
         return state
 
     def extract_brief(self, user_request: str) -> IntakeDraft:
         """Calls Bedrock to parse the raw request into an IntakeDraft.
 
         Leaves any field unset (None) when the user didn't mention it,
-        rather than guessing.
+        rather than guessing. Falls back to campaign_planning if the model
+        doesn't classify an intent.
         """
         prompt = EXTRACTION_PROMPT_TEMPLATE.format(user_request=user_request)
         extracted = self._bedrock_client.extract_structured(prompt, ExtractedIntakeFields)
-        return IntakeDraft(user_request=user_request, **extracted.model_dump())
+        fields = extracted.model_dump(exclude={"intent"})
+        return IntakeDraft(user_request=user_request, intent=extracted.intent or Intent.CAMPAIGN_PLANNING, **fields)
 
     def find_missing_fields(self, draft: IntakeDraft) -> list[IntakeField]:
         missing: list[IntakeField] = []
-        for field in IntakeField:
+        for field in REQUIRED_FIELDS_BY_INTENT[draft.intent]:
             value = getattr(draft, field.value)
             if not value:
                 missing.append(field)
@@ -79,8 +101,13 @@ class LucyCampaignIntake:
         Uses model_validate rather than model_copy(update=...): the latter
         assigns nested fields (budget, locations, ...) without revalidating,
         leaving them as raw dicts instead of BudgetSpec/Location instances.
+
+        Excludes intent: it's classified once during extraction, and the
+        form submission doesn't carry it, so submission.intent would always
+        be its default (campaign_planning) and clobber whatever extraction
+        actually classified.
         """
-        updates = submission.model_dump(exclude_none=True, exclude={"user_request"})
+        updates = submission.model_dump(exclude_none=True, exclude={"user_request", "intent"})
         return IntakeDraft.model_validate({**draft.model_dump(), **updates})
 
     def finalize_brief(self, draft: IntakeDraft) -> CampaignPlannerInput:

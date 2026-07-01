@@ -30,10 +30,13 @@ class SupabaseClient:
         return response.data
 
     def get_location_metrics(self, organization_id: str, lookback_days: int = 90) -> list[dict]:
+        # No FK exists between campaign_location_metrics.place_id and
+        # brand_locations (which has no place_id column at all), so this can't
+        # embed brand_locations - it's place_id-only until that mapping exists.
         since = (date.today() - timedelta(days=lookback_days)).isoformat()
         response = (
             self._client.table("campaign_location_metrics")
-            .select("*, brand_locations(name, address, timezone)")
+            .select("*")
             .eq("organization_id", organization_id)
             .gte("date", since)
             .execute()
@@ -41,26 +44,39 @@ class SupabaseClient:
         return response.data
 
     def get_audience_metrics(self, organization_id: str) -> list[dict]:
-        # campaign_audience_metrics carries no organization_id of its own; it's scoped
-        # to the org via the owning campaign.
+        # campaign_audience_metrics carries its own organization_id column, and
+        # there's no FK to campaigns to embed through anyway (its only FK is
+        # source_campaign_metric_id -> campaign_metrics).
         response = (
             self._client.table("campaign_audience_metrics")
-            .select("*, campaigns!inner(organization_id)")
-            .eq("campaigns.organization_id", organization_id)
+            .select("*")
+            .eq("organization_id", organization_id)
             .execute()
         )
         return response.data
 
     def get_creative_metrics(self, organization_id: str) -> list[dict]:
-        # campaign_creative_metrics carries no organization_id of its own; it's scoped
-        # to the org via the owning creative asset.
+        # campaign_creative_metrics carries its own organization_id column, but
+        # creative_id has no FK to creative_assets.asset_id for PostgREST to
+        # embed through, so asset_type is joined manually below instead.
         response = (
             self._client.table("campaign_creative_metrics")
-            .select("*, creative_assets!inner(org_id, asset_type)")
-            .eq("creative_assets.org_id", organization_id)
+            .select("*")
+            .eq("organization_id", organization_id)
             .execute()
         )
-        return response.data
+        rows = response.data
+        creative_ids = list({row["creative_id"] for row in rows if row.get("creative_id")})
+        if not creative_ids:
+            return rows
+
+        assets_response = (
+            self._client.table("creative_assets").select("asset_id, asset_type").in_("asset_id", creative_ids).execute()
+        )
+        asset_types = {asset["asset_id"]: asset["asset_type"] for asset in assets_response.data}
+        for row in rows:
+            row["asset_type"] = asset_types.get(row.get("creative_id"))
+        return rows
 
     def get_brand(self, brand_id: str) -> BrandRow:
         response = (
